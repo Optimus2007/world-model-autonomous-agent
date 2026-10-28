@@ -68,6 +68,7 @@ Run these from the project root with the virtual environment active. `run_adapt_
 | 6: reversion 0° → 60° → 0° | `python scripts/run_reversion.py --config configs/reversion60.yaml --out results/s6_reversion --workers 5` | `results/s6_reversion` |
 | 7a: tune re-detection (seeds 100–102) | `python scripts/run_redetect.py --phase tune --config configs/redetect60.yaml --out results/s7_redetect_tune --workers 7` | `results/s7_redetect_tune` (`selection.json`) |
 | 7b: change during adaptation (seeds 0–4) | `python scripts/run_redetect.py --phase eval --config configs/redetect60.yaml --out results/s7_redetect --workers 7` | `results/s7_redetect` |
+| 8: research study (short-window competitor, seeds 5–9, three untuned schedules) | the three `run_redetect.py --config configs/redetect60_ext.yaml` commands in `research/report.md`, Section 10, then `python scripts/analyze_research.py` | `results/s8_short_s0_4`, `results/s8_seeds5_9`, `results/s8_newscen`; tables and figures in `research/results`, `research/figures` |
 
 Seeds are fixed in the configs. Pretraining, calibration, evaluation, tuning and held-out reset seeds
 come from separate ranges, and `run_adapt_sweep.py` asserts that tuning and evaluation share no environment
@@ -217,6 +218,20 @@ paired comparison except one near-tie, at no cost in the control apart from a fe
 For the replay ratio, the Step 6 advice holds: with restart, replay 0.25 gave the best whole-run return in
 both multi-change scenarios. Fresh-only remains the choice if changes are known to be permanent and
 new-dynamics error matters most.
+
+**Step 8, research study.** The full write-up is `research/report.md` (related work in
+`research/related_work.md`, plan in `research/plan.md`). It extends Step 7 to 10 evaluation seeds, adds three
+schedules never used for tuning (a later −30° change, a −60° change, a gain change) and tests a competing
+explanation: the legacy `ignore` policy with a short window (`max_new` 150). Main findings:
+- Restart beat ignore after every rotation second change, in 40/40 fresh-only and 39/40 replay seed
+  comparisons; no effect for the gain change and none in the single-change control.
+- The short window recovered at least half of restart's gain in every rotation schedule, and all of it in
+  two of four. Restart kept a clear advantage only when a large change hit a still-open window. This
+  qualifies the Step 7 recommendation: much of restart's gain comes from ending the stale window sooner.
+- Replay 0.25 helped strongly under ignore but little under restart, and it lowered return in every seed in
+  the single-change control and after the gain change.
+
+The Step 7 numbers above are unchanged; Step 8 adds seeds and conditions in new result directories.
 
 ## Dashboard
 

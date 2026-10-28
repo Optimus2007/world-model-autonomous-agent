@@ -56,8 +56,9 @@ from autonomous_agent.schedule import segment_index  # noqa: E402
 
 def dyn_label(dyn: dict | None) -> str:
     dyn = dyn or {}
-    assert set(dyn) <= {"rotation_deg"}, "held-out labels cover rotation changes only"
-    return f"rot{dyn.get('rotation_deg', 0.0):g}"
+    assert set(dyn) <= {"rotation_deg", "gain", "drag"}, "held-out labels cover rotation, gain and drag changes"
+    extra = "".join(f"_{k}{dyn[k]:g}" for k in ("gain", "drag") if k in dyn)   # rotation-only labels unchanged
+    return f"rot{dyn.get('rotation_deg', 0.0):g}{extra}"
 
 
 def heldout_sets(cfg, aseed, base, scenario):
@@ -78,6 +79,7 @@ def run_condition(cfg, scenario, spec, model, pre, cal_stats, heldout, ep_seeds,
     change_eps = [c["episode"] for c in scenario["changes"]]
     oracle = spec["mode"] == "oracle"
     adapt = replace(cfg["agent"].adapt, min_new=spec.get("min_new", cfg["agent"].adapt.min_new),
+                    max_new=spec.get("max_new", cfg["agent"].adapt.max_new),
                     replay_ratio=spec.get("replay_ratio", 0.0),
                     on_alarm_during_adapt=spec.get("policy", "ignore"),
                     redetect_drift=spec.get("redetect_drift", rd["redetect_drift"] or 1.5),
@@ -217,7 +219,8 @@ def plot(scen_name, scen, per_seed, names, seeds, out):
     fig, axes = plt.subplots(1, 2, figsize=(14, 4.6))
     styles = {"none": ("0.5", "-"), "fresh_ignore": ("tab:blue", "--"), "fresh_restart": ("tab:blue", "-"),
               "replay_ignore": ("tab:red", "--"), "replay_restart": ("tab:red", "-"),
-              "oracle_fresh": ("tab:blue", ":"), "oracle_replay": ("tab:red", ":")}
+              "oracle_fresh": ("tab:blue", ":"), "oracle_replay": ("tab:red", ":"),
+              "fresh_ignore_short": ("tab:cyan", "-."), "replay_ignore_short": ("tab:orange", "-.")}
     for c in names:
         ret = np.array([[e["return"] for e in per_seed[s][scen_name][c]["episodes"]] for s in per_seed])
         col, ls = styles.get(c, ("k", "-"))
@@ -272,7 +275,8 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--workers", type=int, default=1)
     p.add_argument("--seeds", type=int, nargs="+", help="override seeds (pilot only)")
-    p.add_argument("--scenarios", nargs="+", help="override scenarios (pilot only)")
+    p.add_argument("--scenarios", nargs="+", help="run only these scenarios")
+    p.add_argument("--conditions", nargs="+", help="run only these conditions (eval phase)")
     args = p.parse_args()
     cfg = load_config(args.config)
     rd = cfg["raw"]["redetect"]
@@ -286,6 +290,9 @@ def main():
             raise SystemExit("set redetect.redetect_drift / redetect_threshold from the tuning selection first")
         seeds, scens, conds = cfg["shift_experiment"]["seeds"], list(rd["scenarios"]), rd["conditions"]
     seeds, scens = args.seeds or seeds, args.scenarios or scens
+    if args.conditions:
+        conds = [c for c in conds if c["name"] in args.conditions]
+        assert len(conds) == len(args.conditions), "unknown condition name"
     if args.phase == "eval":
         assert not set(seeds) & set(rd["tune"]["seeds"]), "evaluation seeds overlap tuning seeds"
     out.mkdir(parents=True)

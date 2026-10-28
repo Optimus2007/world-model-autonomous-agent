@@ -134,3 +134,26 @@ def test_redetect_runner_reproduces_reversion_runner_with_ignore_policy():
     new = run_redetect.run_condition(cfg, scen, {**spec, "policy": "ignore"}, model, pre, cal, held, seeds, 0)
     assert new["residual"] == old["residual"] and new["alarms"] == old["alarms"]
     assert [e["return"] for e in new["episodes"]] == [e["return"] for e in old["episodes"]]
+
+
+def test_dyn_label_keeps_rotation_labels_and_names_gain():
+    assert run_redetect.dyn_label(None) == "rot0"
+    assert run_redetect.dyn_label({"rotation_deg": -30.0}) == "rot-30"
+    assert run_redetect.dyn_label({"rotation_deg": 60.0, "gain": 0.5}) == "rot60_gain0.5"
+
+
+def test_condition_max_new_override_reaches_the_agent():
+    cfg = load_config(ROOT / "configs" / "redetect60_ext.yaml")
+    cfg["env"] = replace(cfg["env"], max_steps=5)
+    cfg["agent"] = replace(cfg["agent"], planner=PlannerConfig(horizon=2, n_candidates=8, n_elites=2, iterations=1))
+    rng = np.random.default_rng(2)
+    s, a = rng.normal(size=(100, 4)), rng.uniform(-1, 1, (100, 2))
+    model = EnsembleWorldModel(config=ModelConfig(n_members=2, hidden=8, epochs=1), seed=0)
+    model.fit(s, a, s)
+    pre = {"state": s, "action": a, "next_state": s}
+    cal = {"residual": {"mu_log": -9.0, "sd_log": 1.0}, "disagreement": {"mu_log": -11.0, "sd_log": 1.0}}
+    scen = {"segments": ["original"], "changes": []}
+    specs = {c["name"]: c for c in cfg["raw"]["redetect"]["conditions"]}
+    for name, want in (("fresh_ignore_short", 150), ("fresh_ignore", cfg["agent"].adapt.max_new)):
+        run = run_redetect.run_condition(cfg, scen, specs[name], model, pre, cal, {"rot0": pre}, [800], 0)
+        assert run["adapt"]["max_new"] == want

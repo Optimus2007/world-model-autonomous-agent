@@ -1,0 +1,113 @@
+# Step 8 (research extension of Step 7). Identical env, model, planner, detector, calibration, adaptation and
+# re-detection settings to configs/redetect60.yaml; nothing here is tuned. Adds, fixed before any run:
+#  - fresh/replay_ignore_short: legacy "ignore" policy with a short window (max_new 150, i.e. two fine-tunes).
+#    Competing explanation for Step 7: restart helps only because the stale window ends sooner.
+#  - three second-change scenarios not used for tuning (later timing, larger jump, a gain change).
+#  - evaluation seeds 5-9 for the Step 7 scenarios (seeds 0-4 are in results/s7_redetect).
+# Original header of configs/redetect60.yaml follows.
+# A dynamics change during an active adaptation window (Step 7).
+# Same env, reward, model, planner, detector, calibration and adaptation settings as
+# configs/reversion60.yaml (min_new 50; replay 0 or 0.25 from the s5 selection on tuning seeds 100-102).
+# New: what the agent does when the residual rises again while a window is open (adapt.on_alarm_during_adapt).
+# "ignore" is the legacy behaviour; "restart" uses a re-detection CUSUM whose drift/threshold are chosen on
+# tuning seeds 100-102 (results/s7_redetect_tune/selection.json) and only then fixed below for evaluation.
+seed: 0
+env:
+  arena: 2.0
+  max_steps: 100
+  goal_radius: 0.15
+  action_cost: 0.01
+  dynamics:
+    gain: 1.0
+    drag: 0.5
+    dt: 0.1
+    process_noise: 0.02
+model:
+  n_members: 5
+  hidden: 128
+  layers: 2
+  lr: 0.001
+  epochs: 60
+  batch_size: 256
+  holdout_frac: 0.1
+  wall_clip_predictions: true
+  train_exclude_walls: true
+  arena: 2.0
+planner:
+  horizon: 15
+  n_candidates: 256
+  n_elites: 25
+  iterations: 4
+  init_std: 0.6
+  action_cost: 0.01
+detector:
+  drift: 0.5
+  threshold: 10.0
+adapt:
+  min_new: 100
+  every: 100
+  max_new: 500
+  epochs: 40
+  lr: 0.001
+data:
+  pretrain_episodes: 30
+shift:
+  rotation_deg: 60.0
+shift_experiment:
+  calib_episodes: 5
+  episodes: 30
+  shift_episode: 8
+  seeds: [0, 1, 2, 3, 4]
+redetect:
+  scenarios:
+    persistent:
+      segments: [original, changed]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+    reversion:
+      segments: [original, changed, reverted]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+      - {episode: 20, dynamics: {rotation_deg: 0.0}}
+    second_change:
+      segments: [original, changed, changed_again]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+      - {episode: 11, dynamics: {rotation_deg: -30.0}}
+    # not used for tuning: second change later in the window
+    late_second:
+      segments: [original, changed, changed_again]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+      - {episode: 15, dynamics: {rotation_deg: -30.0}}
+    # not used for tuning: larger second jump (120 deg relative to the first change)
+    large_second:
+      segments: [original, changed, changed_again]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+      - {episode: 11, dynamics: {rotation_deg: -60.0}}
+    # not used for tuning: second change of a different type (actuator gain halved, rotation kept)
+    gain_second:
+      segments: [original, changed, changed_again]
+      changes:
+      - {episode: 8, dynamics: {rotation_deg: 60.0}}
+      - {episode: 11, dynamics: {rotation_deg: 60.0, gain: 0.5}}
+  record: []
+  conditions:
+  - {name: none, mode: none}
+  - {name: fresh_ignore, mode: residual, min_new: 50, replay_ratio: 0.0, policy: ignore}
+  - {name: fresh_restart, mode: residual, min_new: 50, replay_ratio: 0.0, policy: restart}
+  - {name: replay_ignore, mode: residual, min_new: 50, replay_ratio: 0.25, policy: ignore}
+  - {name: replay_restart, mode: residual, min_new: 50, replay_ratio: 0.25, policy: restart}
+  - {name: fresh_ignore_short, mode: residual, min_new: 50, replay_ratio: 0.0, policy: ignore, max_new: 150}
+  - {name: replay_ignore_short, mode: residual, min_new: 50, replay_ratio: 0.25, policy: ignore, max_new: 150}
+  - {name: oracle_fresh, mode: oracle, min_new: 50, replay_ratio: 0.0}
+  - {name: oracle_replay, mode: oracle, min_new: 50, replay_ratio: 0.25}
+  # from results/s7_redetect_tune/selection.json (tuning seeds 100-102), unchanged
+  redetect_drift: 1.5
+  redetect_threshold: 10.0
+  max_redetections: 2
+  tune:
+    seeds: [100, 101, 102]
+    scenarios: [persistent, second_change]
+    grid: {redetect_drift: [1.0, 1.5, 2.0], redetect_threshold: [10.0, 20.0]}
