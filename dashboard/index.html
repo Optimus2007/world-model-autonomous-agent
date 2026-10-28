@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World-Model Agent Replay</title>
+<!--
+  Replays a real logged agent run: results/<run>/demo_run.json and summary.json, written by scripts/run_shift.py,
+  run_adapt_sweep.py or run_reversion.py (choose with ?run=<name>; default s3_shift).
+  Nothing here is simulated or invented: every number and mark is read from that file.
+  Serve from the project root:  python -m http.server 8000  ->  http://localhost:8000/dashboard/
+  Visual direction follows the Impresario skill's app/dashboard scope (operational clarity, motion only
+  to explain state change) and its colour procedure: a single drafting-film blue tonal world, with
+  data marks as the only other colours (see dashboard/DIRECTION.md).
+-->
+<style>
+:root {
+  --ground: oklch(0.975 0.008 240);
+  --panel: oklch(0.995 0.004 240);
+  --rule: oklch(0.88 0.02 240);
+  --ink: oklch(0.24 0.03 250);
+  --ink-2: oklch(0.45 0.03 250);
+  --real: oklch(0.24 0.03 250);
+  --pred: oklch(0.55 0.16 255);
+  --cand: oklch(0.80 0.04 250);
+  --resid: oklch(0.58 0.19 30);
+  --disag: oklch(0.58 0.11 185);
+  --shift: oklch(0.80 0.13 80);
+  --alarm: oklch(0.55 0.21 27);
+  --update: oklch(0.55 0.14 150);
+  --goal: oklch(0.55 0.14 150);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: oklch(0.17 0.02 250); --panel: oklch(0.21 0.025 250); --rule: oklch(0.32 0.03 250);
+    --ink: oklch(0.93 0.01 240); --ink-2: oklch(0.72 0.02 240); --real: oklch(0.93 0.01 240);
+    --pred: oklch(0.72 0.14 250); --cand: oklch(0.40 0.03 250); --resid: oklch(0.70 0.17 35);
+    --disag: oklch(0.75 0.10 185); --shift: oklch(0.72 0.12 80); --alarm: oklch(0.68 0.19 27);
+    --update: oklch(0.72 0.14 150); --goal: oklch(0.72 0.14 150);
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink);
+  font: 14px/1.45 ui-sans-serif, -apple-system, "Helvetica Neue", sans-serif; }
+header { padding: 18px 24px 8px; }
+h1 { font-size: 18px; margin: 0 0 4px; font-weight: 600; }
+.sub { color: var(--ink-2); font-size: 13px; max-width: 980px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 10px 24px;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: var(--panel);
+  position: sticky; top: 0; z-index: 2; }
+.controls label { font-size: 12px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; }
+.controls input[type=range] { width: min(420px, 60vw); }
+button, select { font: inherit; color: var(--ink); background: var(--ground); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+button:hover { border-color: var(--ink-2); }
+.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+main { display: grid; grid-template-columns: minmax(300px, 520px) 1fr; gap: 16px; padding: 16px 24px 32px; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 12px 16px; } header, .controls { padding-left: 16px; padding-right: 16px; } }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.card h2 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+.card .note { font-size: 12px; color: var(--ink-2); margin: 0 0 8px; }
+canvas { width: 100%; display: block; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.readout { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; font-size: 12.5px; }
+.readout dt { color: var(--ink-2); }
+.readout dd { margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+.sw { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 5px; border-radius: 2px; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11.5px; font-weight: 600; }
+.b-shift { background: color-mix(in oklch, var(--shift) 35%, transparent); }
+.b-alarm { background: color-mix(in oklch, var(--alarm) 25%, transparent); color: var(--alarm); }
+.b-update { background: color-mix(in oklch, var(--update) 25%, transparent); color: var(--update); }
+.cmd { font-size: 12px; background: var(--ground); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; overflow-x: auto; white-space: pre; }
+table.agg { border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+table.agg th, table.agg td { padding: 3px 10px 3px 0; text-align: right; border-bottom: 1px solid var(--rule); }
+table.agg th:first-child, table.agg td:first-child { text-align: left; }
+table.agg th { color: var(--ink-2); font-weight: 600; }
+#err { color: var(--alarm); padding: 24px; display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>World-model agent: replay of a logged run</h1>
+  <div class="sub" id="sub">Loading the run log …</div>
+</header>
+<div class="controls">
+  <label>run <select id="runSel">
+    <option value="s3_shift">s3_shift: gain/drag change</option>
+    <option value="s4_rotation60">s4_rotation60: actuator rotation 60°</option>
+    <option value="s4_rotation90">s4_rotation90: actuator rotation 90°</option>
+    <option value="s5_adapt_eval60">s5_adapt_eval60: adaptation speed / replay, 60°</option>
+    <option value="s5_adapt_eval90">s5_adapt_eval90: adaptation speed / replay, 90°</option>
+    <option value="s6_reversion">s6_reversion: 0° → 60° → back to 0°</option>
+  </select></label>
+  <button id="play">Play</button>
+  <label>step <input type="range" id="slider" min="0" max="0" value="0"></label>
+  <span class="mono" id="stepLabel"></span>
+  <label>episode <select id="epSel"></select></label>
+  <label>speed <select id="speed"><option value="80">slow</option><option value="30" selected>normal</option><option value="8">fast</option></select></label>
+  <button id="toShift">Jump to shift</button>
+  <button id="toAlarm">Jump to alarm</button>
+</div>
+<div id="err"></div>
+<main>
+  <div class="col">
+    <section class="card">
+      <h2>Environment, trajectory and plan</h2>
+      <p class="note">Real path this episode; each ensemble member's predicted path for the chosen plan; a sample of the planner's candidate plans (lighter = lower predicted cost); arrow = executed action.</p>
+      <canvas id="arena" height="480"></canvas>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--real)"></i>real trajectory / issued action</span>
+        <span id="effLegend" hidden><i class="sw" style="background:var(--shift)"></i>effective action (after actuator)</span>
+        <span><i class="sw" style="background:var(--pred)"></i>predicted (5 members)</span>
+        <span><i class="sw" style="background:var(--cand)"></i>candidate plans</span>
+        <span><i class="sw" style="background:var(--goal)"></i>goal</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>This decision</h2>
+      <dl class="readout mono" id="readout"></dl>
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <h2>Observed prediction error and uncertainty over the run</h2>
+      <p class="note">Residual = squared error of the model's one-step prediction, scored before the model sees the transition. Disagreement = ensemble variance. Log scale, 9-step moving mean (raw values in the readout). Click to jump.</p>
+      <canvas id="timeline" height="230"></canvas>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--resid)"></i>residual (observed error)</span>
+        <span><i class="sw" style="background:var(--disag)"></i>disagreement</span>
+        <span><i class="sw" style="background:var(--shift)"></i>dynamics changed</span>
+        <span><i class="sw" style="background:var(--alarm)"></i>detector alarm</span>
+        <span><i class="sw" style="background:var(--update)"></i>model fine-tune</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Change detector (CUSUM on standardised log residual)</h2>
+      <p class="note">Statistic resets after each model update. Dashed line = alarm threshold.</p>
+      <canvas id="cusum" height="150"></canvas>
+    </section>
+    <section class="card">
+      <h2>Uncertainty vs measured error</h2>
+      <p class="note">Every step of the run. If disagreement predicted error, points would lie along a rising diagonal; after the change they do not.</p>
+      <canvas id="scatter" height="260"></canvas>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--ink-2)"></i>before change</span>
+        <span><i class="sw" style="background:var(--resid)"></i>after change, before first model update</span>
+        <span><i class="sw" style="background:var(--update)"></i>after first update</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Task performance per episode</h2>
+      <p class="note">Episode return (higher is better). Shaded episodes ran under changed dynamics.</p>
+      <canvas id="episodes" height="150"></canvas>
+    </section>
+    <section class="card" id="tlCard" hidden>
+      <h2>Adaptation timeline (seed <span class="cmpSeed"></span>, condition <span id="tlCond"></span>)</h2>
+      <p class="note">From the run's own log. Held-out errors are measured on random-policy transitions the agent never trains on, immediately before and after every fine-tune.</p>
+      <dl class="readout mono" id="tlReadout"></dl>
+      <canvas id="tlChart" height="190"></canvas>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--pred)"></i>held-out error, new (changed) dynamics</span>
+        <span><i class="sw" style="background:var(--ink-2)"></i>held-out error, original dynamics</span>
+        <span><i class="sw" style="background:var(--shift)"></i>change</span>
+        <span><i class="sw" style="background:var(--alarm)"></i>detection</span>
+        <span><i class="sw" style="background:var(--update)"></i>fine-tune</span>
+      </div>
+    </section>
+    <section class="card" id="cmpCard" hidden>
+      <h2>Conditions compared on the same episodes (seed <span class="cmpSeed"></span>)</h2>
+      <p class="note">Episode return per condition. Same episode seeds, same shift timing. "oracle" rows are references that are told about the change; they are not deployable methods.</p>
+      <canvas id="cmpReturn" height="200"></canvas>
+      <div class="legend" id="cmpLegend"></div>
+    </section>
+    <section class="card" id="cmpResCard" hidden>
+      <h2>Model prediction error during recovery (seed <span class="cmpSeed"></span>)</h2>
+      <p class="note" id="cmpResNote">Observed one-step error of each agent's own model, scored before training on the step; 15-step moving mean, log scale, x = steps since the change.</p>
+      <canvas id="cmpResid" height="200"></canvas>
+    </section>
+    <section class="card" id="phaseCard" hidden>
+      <h2>Phases, all seeds (from summary.json)</h2>
+      <p class="note">Mean ± sd across seeds. Held-out error = one-step MSE on random-policy transitions no agent trains on, measured at the end of each phase. "Adapting at reversion" = share of seeds still inside an adaptation window when the original dynamics returned (alarms are ignored during one). Oracle rows are told the change episodes; they are references, not deployable methods.</p>
+      <div style="overflow-x:auto"><table class="mono agg" id="phaseTable"></table></div>
+    </section>
+    <section class="card" id="aggCard" hidden>
+      <h2>All seeds (from summary.json)</h2>
+      <p class="note">Mean ± sd across seeds; per-seed values in metrics.json. Recovery = first post-change episode that starts 3 consecutive successes ("—" = never within the run). Model error = held-out random-policy trajectories under the changed dynamics.</p>
+      <div style="overflow-x:auto"><table class="mono agg" id="aggTable"></table></div>
+    </section>
+    <section class="card">
+      <h2>Experiment controls</h2>
+      <p class="note">This page replays a finished run; experiments are started from the command line so every run is saved with its config, seeds and checkpoints.</p>
+      <div class="cmd" id="cmds"></div>
+    </section>
+  </div>
+</main>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let D, S, cur = 0, timer = null, firstUpdate = null, alarmSteps = [], updateSteps = [], threshold = 10;
+
+// Phase-aware runs (s6) carry D.changes and per-step `phase` (0 original, 1 changed, 2 reverted).
+const isChanged = s => D.changes ? s.phase === 1 : s.shifted;
+const isReverted = s => !!D.changes && s.phase === 2;
+function setupCanvas(c) {
+  const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = +c.getAttribute("height");
+  c.width = w * dpr; c.height = h * dpr; c.style.height = h + "px";
+  const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); return [g, w, h];
+}
+const fmt = (x, d = 3) => x == null ? "—" : (Math.abs(x) < 1e-2 && x !== 0 ? x.toExponential(2) : x.toFixed(d));
+const smooth = (a, k) => a.map((_, i) => { let s = 0, n = 0; for (let j = Math.max(0, i - k + 1); j <= i; j++) { s += a[j]; n++; } return s / n; });
+
+const RUN = new URLSearchParams(location.search).get("run") || "s3_shift";
+let SUMMARY = null;
+$("runSel").value = RUN;
+$("runSel").onchange = e => { location.search = "?run=" + e.target.value; };
+fetch(`../results/${RUN}/summary.json`).then(r => r.ok ? r.json() : null).catch(() => null).then(sm => { SUMMARY = sm; return fetch(`../results/${RUN}/demo_run.json`); })
+  .then(r => { if (!r.ok) throw new Error(r.status + " " + r.statusText); return r.json(); })
+  .then(init).catch(e => { $("err").style.display = "block";
+    $("err").textContent = `Could not load ../results/${RUN}/demo_run.json (` + e.message + "). Run scripts/run_shift.py, then serve the project root: python -m http.server 8000"; });
+
+function init(d) {
+  D = d; S = d.steps;
+  threshold = (d.config.detector || {}).threshold ?? 10;
+  // Alarms come from the agent's event log: the per-step flag stays raised while the statistic is above threshold.
+  const idx = new Map(S.map((s, i) => [s.global_step, i]));
+  alarmSteps = d.events.filter(e => e.type === "alarm" && idx.has(e.step)).map(e => idx.get(e.step));
+  S.forEach((s, i) => { if (s.update) updateSteps.push(i); });
+  firstUpdate = updateSteps.length ? updateSteps[0] : null;
+  const shiftIdx = S.findIndex(s => s.shifted);
+  const before = S[0].dynamics_true, change = Object.entries(d.shift).map(([k, v]) => `${k} ${before[k] ?? 0}→${v}`).join(", ");
+  $("sub").textContent = `Run ${RUN}. Seed ${d.seed}, residual-detection agent, ${S.length} real environment steps over ${d.episodes.length} episodes. ` +
+    `Dynamics change at step ${d.shift_step} (${change}); the agent is not told. Detector reference: ${d.calibration.residual.n} out-of-sample calibration steps.`;
+  $("effLegend").hidden = !("effective_action" in S[0]);
+  $("slider").max = S.length - 1;
+  d.episodes.forEach((e, i) => { const o = document.createElement("option"); o.value = i;
+    const tag = d.changes ? ["", " (rotated)", " (reverted)"][e.phase] : (e.post_shift ? " (changed)" : "");
+    o.textContent = `${i}${tag}: ${e.success ? "reached goal" : "failed"} in ${e.steps}`; $("epSel").appendChild(o); });
+  $("slider").oninput = e => go(+e.target.value);
+  $("epSel").onchange = e => go(S.findIndex(s => s.episode === +e.target.value));
+  $("play").onclick = toggle;
+  $("toShift").onclick = () => go(Math.max(0, shiftIdx));
+  $("toAlarm").onclick = () => alarmSteps.length && go(alarmSteps[0]);
+  $("toAlarm").disabled = !alarmSteps.length;
+  for (const id of ["timeline", "cusum", "episodes"]) $(id).onclick = ev => clickJump(id, ev);
+  const c = d.config;
+  $("cmds").textContent = [
+    ...(d.command ? ["# reproduce this run", d.command] : [
+    `# reproduce this run (config: ${RUN === "s3_shift" ? "configs/agent.yaml" : "configs/" + RUN.replace("s4_", "") + ".yaml"})`,
+    `python scripts/run_shift.py --config ${RUN === "s3_shift" ? "configs/agent.yaml" : "configs/" + RUN.replace("s4_", "") + ".yaml"} --out results/${RUN}`]),
+    "# planning comparison (Step 2)",
+    "python scripts/run_planning.py --config configs/agent.yaml --out results/s2_planning",
+    "",
+    `planner: horizon ${c.planner?.horizon}, ${c.planner?.n_candidates} candidates, ${c.planner?.iterations} CEM iterations`,
+    `detector: drift ${c.detector?.drift}, threshold ${c.detector?.threshold}`,
+    ((a) => `adaptation${d.condition ? " (" + d.condition + ")" : ""}: first fine-tune after ${a?.min_new} fresh steps, then every ${a?.every}, up to ${a?.max_new}; ` +
+      `${a?.epochs} epochs; replay ratio ${a?.replay_ratio ?? 0}`)(d.adapt_settings || c.adapt),
+    `shift: ${JSON.stringify(D.shift)} from episode ${c.shift_experiment?.shift_episode}` +
+      (c.shift_experiment?.revert_episode != null ? `; back to ${JSON.stringify(c.shift_experiment.revert)} from episode ${c.shift_experiment.revert_episode}` : ""),
+  ].join("\n");
+  window.addEventListener("resize", drawAll);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+  drawAggTable();
+  const h = /step=(\d+)/.exec(location.hash);
+  go(h ? +h[1] : 0);
+}
+
+function toggle() {
+  if (timer) { clearInterval(timer); timer = null; $("play").textContent = "Play"; return; }
+  $("play").textContent = "Pause";
+  timer = setInterval(() => { if (cur >= S.length - 1) return toggle(); go(cur + 1); }, +$("speed").value);
+}
+$("speed").onchange = () => { if (timer) { toggle(); toggle(); } };
+
+function go(i) { cur = Math.max(0, Math.min(S.length - 1, i)); $("slider").value = cur; $("epSel").value = S[cur].episode; drawAll(); }
+
+function drawAll() { if (!S) return; drawArena(); drawReadout(); drawTimeline(); drawCusum(); drawScatter(); drawEpisodes(); drawComparison(); drawAdaptTimeline(); }
+
+function drawArena() {
+  const [g, w] = setupCanvas($("arena"));
+  const s = S[cur], A = D.config.env?.arena ?? 2, size = Math.min(w, 480), ox = (w - size) / 2, pad = 10;
+  const X = x => ox + pad + (x + A) / (2 * A) * (size - 2 * pad), Y = y => pad + (A - y) / (2 * A) * (size - 2 * pad);
+  g.strokeStyle = css("--rule"); g.lineWidth = 1; g.strokeRect(X(-A), Y(A), X(A) - X(-A), Y(-A) - Y(A));
+  if (isChanged(s)) { g.fillStyle = css("--shift"); g.globalAlpha = 0.10; g.fillRect(X(-A), Y(A), X(A) - X(-A), Y(-A) - Y(A)); g.globalAlpha = 1; }
+  // candidates, lighter = cheaper
+  const cc = s.candidate_costs, lo = Math.min(...cc), hi = Math.max(...cc);
+  s.candidate_states.forEach((tr, k) => { g.strokeStyle = css("--cand"); g.globalAlpha = 0.25 + 0.6 * (1 - (cc[k] - lo) / (hi - lo + 1e-9));
+    g.beginPath(); tr.forEach(([x, y], j) => j ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y))); g.stroke(); });
+  g.globalAlpha = 1;
+  // goal
+  g.fillStyle = css("--goal"); g.globalAlpha = 0.18; g.beginPath(); g.arc(X(s.goal[0]), Y(s.goal[1]), (D.config.env?.goal_radius ?? 0.15) / (2 * A) * (size - 2 * pad), 0, 7); g.fill();
+  g.globalAlpha = 1; g.strokeStyle = css("--goal"); g.lineWidth = 2; g.beginPath(); g.arc(X(s.goal[0]), Y(s.goal[1]), 4, 0, 7); g.stroke();
+  // members' predicted path for the chosen plan
+  g.strokeStyle = css("--pred"); g.lineWidth = 1.5;
+  s.plan_states_members.forEach(tr => { g.beginPath(); tr.forEach(([x, y], j) => j ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y))); g.stroke(); });
+  // real trajectory so far in this episode (incl. the outcome of this step)
+  const ep = S.filter(r => r.episode === s.episode && r.t <= s.t);
+  g.strokeStyle = css("--real"); g.lineWidth = 2.2; g.beginPath();
+  ep.forEach((r, j) => j ? g.lineTo(X(r.state[0]), Y(r.state[1])) : g.moveTo(X(r.state[0]), Y(r.state[1])));
+  g.lineTo(X(s.next_state[0]), Y(s.next_state[1])); g.stroke();
+  // current state + action arrow
+  const [px, py] = s.state, [ax, ay] = s.action;
+  g.fillStyle = css("--real"); g.beginPath(); g.arc(X(px), Y(py), 5, 0, 7); g.fill();
+  const L = 0.35; drawArrow(g, X(px), Y(py), X(px + L * ax), Y(py + L * ay), css("--ink"));
+  if (s.effective_action && (s.effective_action[0] !== ax || s.effective_action[1] !== ay)) {
+    const [ex, ey] = s.effective_action; drawArrow(g, X(px), Y(py), X(px + L * ex), Y(py + L * ey), css("--shift")); }
+  g.fillStyle = css("--ink-2"); g.font = "11px ui-monospace, Menlo, monospace";
+  g.fillText(`episode ${s.episode}  t=${s.t}`, X(-A) + 6, Y(A) + 14);
+  if (isChanged(s)) g.fillText("dynamics changed", X(-A) + 6, Y(A) + 28);
+  if (isReverted(s)) g.fillText("dynamics reverted to original", X(-A) + 6, Y(A) + 28);
+}
+function drawArrow(g, x0, y0, x1, y1, col) {
+  g.strokeStyle = g.fillStyle = col; g.lineWidth = 2; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+  const a = Math.atan2(y1 - y0, x1 - x0); g.beginPath(); g.moveTo(x1, y1);
+  g.lineTo(x1 - 8 * Math.cos(a - 0.4), y1 - 8 * Math.sin(a - 0.4)); g.lineTo(x1 - 8 * Math.cos(a + 0.4), y1 - 8 * Math.sin(a + 0.4)); g.fill();
+}
+
+function drawReadout() {
+  const s = S[cur], nUpd = updateSteps.filter(i => i <= cur).length;
+  const v = a => "[" + a.map(x => x.toFixed(3)).join(", ") + "]";
+  const flags = [isChanged(s) ? '<span class="badge b-shift">dynamics changed</span>' : "",
+    isReverted(s) ? '<span class="badge b-update">reverted to original</span>' : "",
+    alarmSteps.includes(cur) ? '<span class="badge b-alarm">alarm</span>' : "", s.update ? '<span class="badge b-update">model fine-tuned</span>' : ""].join(" ");
+  const rows = [
+    ["global step", `${s.global_step}  (episode ${s.episode}, t=${s.t}) ${flags}`],
+    ["state (x, y, vx, vy)", v(s.state)], ["chosen action (issued)", v(s.action)],
+    ...(s.effective_action ? [["effective action", v(s.effective_action) + "  (what the actuators applied)"]] : []),
+    ["predicted next", v(s.predicted_next)], ["actual next", v(s.next_state)],
+    ["observed error", fmt(s.residual) + "  (squared, out-of-sample)"],
+    ["disagreement", fmt(s.disagreement)],
+    ["CUSUM (residual)", fmt(s.cusum_residual, 2) + `  / threshold ${threshold}`],
+    ["plan cost (predicted)", fmt(s.predicted_cost, 2)], ["reward", fmt(s.reward, 3)],
+    ["true dynamics", `gain ${s.dynamics_true.gain}, drag ${s.dynamics_true.drag}` +
+      (s.dynamics_true.rotation_deg != null ? `, rotation ${s.dynamics_true.rotation_deg}°` : "") + "  (hidden from agent)"],
+    ["model updates so far", String(nUpd) + (s.update ? `  (this step: ${s.update.n_fresh} fresh transitions, ${(s.update.seconds * 1e3).toFixed(0)} ms)` : "")],
+    ["decision time", s.plan_ms.toFixed(1) + " ms"],
+  ];
+  $("readout").innerHTML = rows.map(([k, x]) => `<dt>${k}</dt><dd>${x}</dd>`).join("");
+}
+
+function axesLog(g, w, h, m, lo, hi) {
+  const ly0 = Math.log10(lo), ly1 = Math.log10(hi), Y = v => m.t + (ly1 - Math.log10(Math.max(v, lo))) / (ly1 - ly0) * (h - m.t - m.b);
+  g.fillStyle = css("--ink-2"); g.font = "10px ui-monospace, Menlo, monospace"; g.strokeStyle = css("--rule"); g.lineWidth = 1;
+  for (let e = Math.ceil(ly0); e <= ly1; e++) { const y = Y(10 ** e); g.beginPath(); g.moveTo(m.l, y); g.lineTo(w - m.r, y); g.stroke(); g.fillText("1e" + e, 2, y + 3); }
+  return Y;
+}
+function markers(g, X, top, bot) {
+  if (D.changes) {  // band over the changed phase; amber line at the change, dashed ink line at the reversion
+    const a = S.findIndex(s => s.phase === 1), b = S.findIndex(s => s.phase === 2), end = b >= 0 ? b : S.length - 1;
+    if (a >= 0) { g.fillStyle = css("--shift"); g.globalAlpha = 0.18; g.fillRect(X(a), top, X(end) - X(a), bot - top); g.globalAlpha = 1;
+      g.fillRect(X(a) - 1, top, 2, bot - top); }
+    if (b >= 0) { g.strokeStyle = css("--ink"); g.lineWidth = 1.5; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(b), top); g.lineTo(X(b), bot); g.stroke(); g.setLineDash([]); }
+  }
+  const si = D.changes ? -1 : S.findIndex(s => s.shifted);
+  if (si >= 0) { g.fillStyle = css("--shift"); g.globalAlpha = 0.18; g.fillRect(X(si), top, X(S.length - 1) - X(si), bot - top); g.globalAlpha = 1;
+    g.fillStyle = css("--shift"); g.fillRect(X(si) - 1, top, 2, bot - top); }
+  g.fillStyle = css("--alarm"); alarmSteps.forEach(i => g.fillRect(X(i) - 1, top, 2, bot - top));
+  g.fillStyle = css("--update"); updateSteps.forEach(i => { g.beginPath(); g.moveTo(X(i), bot); g.lineTo(X(i) - 4, bot + 7); g.lineTo(X(i) + 4, bot + 7); g.fill(); });
+}
+function cursor(g, X, top, bot) { g.strokeStyle = css("--ink"); g.lineWidth = 1; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(X(cur), top); g.lineTo(X(cur), bot); g.stroke(); g.setLineDash([]); }
+const MARGIN = { l: 38, r: 8, t: 6, b: 16 };
+const xScale = w => i => MARGIN.l + i / (S.length - 1) * (w - MARGIN.l - MARGIN.r);
+
+function drawTimeline() {
+  const [g, w, h] = setupCanvas($("timeline")), X = xScale(w);
+  const r = smooth(S.map(s => s.residual), 9), d = smooth(S.map(s => s.disagreement), 9);
+  const all = r.concat(d).filter(v => v > 0), lo = 10 ** Math.floor(Math.log10(Math.min(...all))), hi = 10 ** Math.ceil(Math.log10(Math.max(...all)));
+  const Y = axesLog(g, w, h, MARGIN, lo, hi);
+  markers(g, X, MARGIN.t, h - MARGIN.b);
+  for (const [arr, col] of [[d, "--disag"], [r, "--resid"]]) { g.strokeStyle = css(col); g.lineWidth = 1.4; g.beginPath(); arr.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke(); }
+  cursor(g, X, MARGIN.t, h - MARGIN.b);
+}
+function drawCusum() {
+  const [g, w, h] = setupCanvas($("cusum")), X = xScale(w), c = S.map(s => s.cusum_residual ?? 0);
+  const hi = Math.max(threshold * 1.6, ...c.map(v => Math.min(v, threshold * 4))), Y = v => MARGIN.t + (1 - Math.min(v, hi) / hi) * (h - MARGIN.t - MARGIN.b);
+  markers(g, X, MARGIN.t, h - MARGIN.b);
+  g.strokeStyle = css("--ink-2"); g.setLineDash([5, 4]); g.beginPath(); g.moveTo(MARGIN.l, Y(threshold)); g.lineTo(w - MARGIN.r, Y(threshold)); g.stroke(); g.setLineDash([]);
+  g.fillStyle = css("--ink-2"); g.font = "10px ui-monospace, Menlo, monospace"; g.fillText(String(threshold), 4, Y(threshold) + 3); g.fillText("0", 4, Y(0));
+  g.strokeStyle = css("--resid"); g.lineWidth = 1.4; g.beginPath(); c.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke();
+  cursor(g, X, MARGIN.t, h - MARGIN.b);
+}
+function drawScatter() {
+  const [g, w, h] = setupCanvas($("scatter")), m = { l: 44, r: 10, t: 8, b: 26 };
+  const xs = S.map(s => s.disagreement), ys = S.map(s => s.residual), pos = a => a.filter(v => v > 0);
+  const ex = [Math.floor(Math.log10(Math.min(...pos(xs)))), Math.ceil(Math.log10(Math.max(...pos(xs))))];
+  const ey = [Math.floor(Math.log10(Math.min(...pos(ys)))), Math.ceil(Math.log10(Math.max(...pos(ys))))];
+  const X = v => m.l + (Math.log10(Math.max(v, 10 ** ex[0])) - ex[0]) / (ex[1] - ex[0]) * (w - m.l - m.r);
+  const Y = v => m.t + (ey[1] - Math.log10(Math.max(v, 10 ** ey[0]))) / (ey[1] - ey[0]) * (h - m.t - m.b);
+  g.strokeStyle = css("--rule"); g.fillStyle = css("--ink-2"); g.font = "10px ui-monospace, Menlo, monospace";
+  for (let e = ey[0]; e <= ey[1]; e++) { g.beginPath(); g.moveTo(m.l, Y(10 ** e)); g.lineTo(w - m.r, Y(10 ** e)); g.stroke(); g.fillText("1e" + e, 4, Y(10 ** e) + 3); }
+  for (let e = ex[0]; e <= ex[1]; e++) { g.beginPath(); g.moveTo(X(10 ** e), m.t); g.lineTo(X(10 ** e), h - m.b); g.stroke(); g.fillText("1e" + e, X(10 ** e) - 10, h - m.b + 12); }
+  g.fillText("disagreement →", w - m.r - 90, h - 2); g.fillText("↑ observed error", m.l + 4, m.t + 10);
+  S.forEach((s, i) => { g.fillStyle = css(isReverted(s) ? "--shift" : !isChanged(s) ? "--ink-2" : (firstUpdate == null || i < firstUpdate) ? "--resid" : "--update");
+    g.globalAlpha = 0.45; g.fillRect(X(s.disagreement) - 1.5, Y(s.residual) - 1.5, 3, 3); });
+  g.globalAlpha = 1; const s = S[cur]; g.strokeStyle = css("--ink"); g.lineWidth = 2; g.beginPath(); g.arc(X(s.disagreement), Y(s.residual), 6, 0, 7); g.stroke();
+}
+function drawEpisodes() {
+  const [g, w, h] = setupCanvas($("episodes")), E = D.episodes, m = { l: 38, r: 8, t: 8, b: 18 };
+  const rs = E.map(e => e.return), lo = Math.min(...rs), hi = Math.max(0, ...rs);
+  const bw = (w - m.l - m.r) / E.length, Y = v => m.t + (hi - v) / (hi - lo) * (h - m.t - m.b);
+  g.fillStyle = css("--ink-2"); g.font = "10px ui-monospace, Menlo, monospace"; g.fillText(lo.toFixed(0), 2, Y(lo)); g.fillText(hi.toFixed(0), 2, Y(hi) + 8);
+  E.forEach((e, i) => { const x = m.l + i * bw;
+    if (e.post_shift) { g.fillStyle = css("--shift"); g.globalAlpha = 0.18; g.fillRect(x, m.t, bw, h - m.t - m.b); g.globalAlpha = 1; }
+    g.fillStyle = css(i === S[cur].episode ? "--ink" : (e.success ? "--pred" : "--alarm"));
+    g.fillRect(x + 1, Y(0), Math.max(1, bw - 2), Y(e.return) - Y(0));
+    if (i % 5 === 0) { g.fillStyle = css("--ink-2"); g.fillText(i, x + 1, h - 4); } });
+}
+function clickJump(id, ev) {
+  const c = $(id), x = ev.offsetX, w = c.clientWidth;
+  if (id === "episodes") { const i = Math.floor((x - 38) / ((w - 46) / D.episodes.length)); const k = S.findIndex(s => s.episode === i); if (k >= 0) go(k); return; }
+  go(Math.round((x - MARGIN.l) / (w - MARGIN.l - MARGIN.r) * (S.length - 1)));
+}
+
+const COND = { residual: ["--pred", [], "residual detection + adaptation"], none: ["--ink-2", [], "no adaptation"],
+  disagreement: ["--disag", [], "disagreement detection + adaptation"], oracle: ["--update", [6, 4], "oracle: adapt at the change"],
+  pd: ["--shift", [], "PD (pre-change gains)"], pd_retuned_oracle: ["--shift", [6, 4], "oracle: PD re-tuned on changed dynamics"],
+  no_shift: ["--ink-2", [2, 3], "control: no change"] };
+function cond(c) {
+  if (COND[c]) return COND[c];
+  const m = /^(adapt|oracle)_m(\d+)_r([\d.]+)$/.exec(c);
+  if (!m) return null;
+  const r = +m[3], col = r === 0 ? "--pred" : r <= 0.25 ? "--disag" : "--update", oracle = m[1] === "oracle";
+  return [col, oracle ? [2, 3] : m[2] === "100" ? [6, 4] : [],
+    `${oracle ? "oracle (told change times)" : "adapt"}: min_new ${m[2]}, replay ${m[3]}`];
+}
+function drawAdaptTimeline() {
+  const T = D.timeline || D.changes; $("tlCard").hidden = !T; if (!T) return;
+  $("tlCond").textContent = D.condition;
+  const a = D.adapt_settings, fts = D.events.filter(e => e.type === "finetune");
+  const dd = (x, y) => x == null || y == null ? "—" : `${x - y} steps after the change`;
+  const rows = D.changes ? D.changes.flatMap((c, i) => {
+    const lbl = i === 0 ? "change" : "reversion", d = c.detection_delay, f = c.first_finetune_delay;
+    return [[lbl, `episode ${c.episode}, step ${c.step} (${Object.entries(c.to).map(([k, v]) => k + " → " + v).join(", ")})`],
+      [`  detection`, d == null ? "no alarm in this phase" : `${d} steps after the ${lbl}`],
+      [`  first fine-tune`, f == null ? "none in this phase" : `${f} steps after the ${lbl}`],
+      [`  1st episode after ${lbl}`, c.first_episode_success ? "reached goal" : "failed"],
+      [`  adapting when it came`, c.adapting_at_change ? `yes (${c.post_alarm_rows_at_change} post-alarm rows; alarms ignored until the window ends)` : "no"]]; })
+    .concat([["settings", `min_new ${a.min_new}, every ${a.every}, max_new ${a.max_new}, ${a.epochs} epochs, lr ${a.lr}, replay ratio ${a.replay_ratio}`],
+      ["fine-tunes", fts.map(e => `${e.n_fresh}+${e.n_replay ?? 0}`).join(", ") + "  (fresh + replayed transitions)"]]) : null;
+  $("tlReadout").innerHTML = (rows || [
+    ["change", `step ${T.change_step} (${Object.entries(D.shift).map(([k, v]) => k + " → " + v).join(", ")})`],
+    ["detection", T.detection_step == null ? "none" : `step ${T.detection_step} (${dd(T.detection_step, T.change_step)})`],
+    ["first fine-tune", T.first_adapt_step == null ? "none" : `step ${T.first_adapt_step} (${dd(T.first_adapt_step, T.change_step)})`],
+    ["first successful post-change episode", T.first_successful_post_episode == null ? "none" : `episode ${T.first_successful_post_episode}` +
+      ` (change at episode ${D.config.shift_experiment?.shift_episode})`],
+    ["settings", `min_new ${a.min_new}, every ${a.every}, max_new ${a.max_new}, ${a.epochs} epochs, lr ${a.lr}, replay ratio ${a.replay_ratio}`],
+    ["fine-tunes", fts.map(e => `${e.n_fresh}+${e.n_replay ?? 0}`).join(", ") + "  (fresh + replayed transitions)"],
+  ]).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  // staircase of held-out errors: initial value, then before/after each fine-tune
+  const [g, w, h] = setupCanvas($("tlChart")), X = xScale(w), idx = new Map(S.map((s, i) => [s.global_step, i]));
+  const series = { new_dynamics: [], old_dynamics: [] };
+  for (const k in series) {
+    let v = D.heldout_initial?.[k]?.h1 ?? fts[0]?.heldout_before?.[k]; series[k].push([0, v]);
+    for (const e of fts) { if (!e.heldout_after) continue; const i = idx.get(e.step) ?? S.length - 1;
+      series[k].push([i, e.heldout_before[k]], [i, e.heldout_after[k]]); }
+    series[k].push([S.length - 1, series[k][series[k].length - 1][1]]);
+  }
+  const vals = Object.values(series).flat().map(p => p[1]).filter(v => v > 0);
+  if (!vals.length) return;
+  const Y = axesLog(g, w, h, MARGIN, 10 ** Math.floor(Math.log10(Math.min(...vals))), 10 ** Math.ceil(Math.log10(Math.max(...vals))));
+  markers(g, X, MARGIN.t, h - MARGIN.b);
+  for (const [k, col] of [["old_dynamics", "--ink-2"], ["new_dynamics", "--pred"]]) {
+    g.strokeStyle = css(col); g.lineWidth = 2; g.beginPath();
+    series[k].forEach(([i, v], j) => j ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke(); }
+  cursor(g, X, MARGIN.t, h - MARGIN.b);
+}
+function drawComparison() {
+  const C = D.comparison;
+  for (const id of ["cmpCard", "cmpResCard"]) $(id).hidden = !C;
+  if (!C) return;
+  document.querySelectorAll(".cmpSeed").forEach(e => e.textContent = D.seed);
+  const names = Object.keys(C).filter(c => cond(c));
+  $("cmpLegend").innerHTML = names.map(c => `<span><i class="sw" style="background:var(${cond(c)[0]})${cond(c)[1].length ? ";opacity:.6" : ""}"></i>${cond(c)[2]}</span>`).join("");
+  // returns per episode
+  let [g, w, h] = setupCanvas($("cmpReturn")); const m = { l: 38, r: 8, t: 8, b: 18 };
+  const nE = C[names[0]].episodes.length, all = names.flatMap(c => C[c].episodes.map(e => e.return));
+  const lo = Math.min(...all), hi = Math.max(0, ...all);
+  const X = i => m.l + (i + 0.5) / nE * (w - m.l - m.r), Y = v => m.t + (hi - v) / (hi - lo) * (h - m.t - m.b);
+  C[names[0]].episodes.forEach((e, i) => { if (e.post_shift) { g.fillStyle = css("--shift"); g.globalAlpha = 0.15;
+    g.fillRect(X(i - 0.5), m.t, X(i + 0.5) - X(i - 0.5), h - m.t - m.b); g.globalAlpha = 1; } });
+  const rv = D.changes ? C[names[0]].episodes.findIndex(e => e.phase === 2) : -1;
+  if (rv >= 0) { g.strokeStyle = css("--ink"); g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(rv - 0.5), m.t); g.lineTo(X(rv - 0.5), h - m.b); g.stroke(); g.setLineDash([]); }
+  g.fillStyle = css("--ink-2"); g.font = "10px ui-monospace, Menlo, monospace"; g.fillText(lo.toFixed(0), 2, Y(lo)); g.fillText("0", 2, Y(0) + 8);
+  for (let i = 0; i < nE; i += 5) g.fillText(i, X(i) - 3, h - 4);
+  for (const c of names) { g.strokeStyle = g.fillStyle = css(cond(c)[0]); g.setLineDash(cond(c)[1]); g.lineWidth = 1.6; g.beginPath();
+    C[c].episodes.forEach((e, i) => i ? g.lineTo(X(i), Y(e.return)) : g.moveTo(X(i), Y(e.return))); g.stroke(); g.setLineDash([]);
+    C[c].episodes.forEach((e, i) => { if (!e.success) { g.beginPath(); g.arc(X(i), Y(e.return), 2.5, 0, 7); g.fill(); } }); }
+  g.strokeStyle = css("--ink"); g.lineWidth = 1; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(X(S[cur].episode), m.t); g.lineTo(X(S[cur].episode), h - m.b); g.stroke(); g.setLineDash([]);
+  g.fillStyle = css("--ink-2"); g.fillText("dots = failed episodes", w - 130, m.t + 10);
+  // residuals since the change
+  [g, w, h] = setupCanvas($("cmpResid"));
+  const rn = names.filter(c => C[c].residual && c !== "no_shift"), k = 15;
+  const start = D.changes ? 0 : D.shift_step;  // phase runs: whole run, with each condition's change/reversion ticked
+  $("cmpResNote").textContent = "Observed one-step error of each agent's own model, scored before training on the step; 15-step moving mean, log scale, " +
+    (D.changes ? "x = agent steps; ticks mark each condition's change (▲) and reversion (▼)." : "x = steps since the change.");
+  const series = rn.map(c => [c, smooth(C[c].residual, k).slice(start)]);
+  const vals = series.flatMap(([, a]) => a).filter(v => v > 0);
+  if (!vals.length) return;
+  const lo2 = 10 ** Math.floor(Math.log10(Math.min(...vals))), hi2 = 10 ** Math.ceil(Math.log10(Math.max(...vals)));
+  const len = Math.max(...series.map(([, a]) => a.length)), X2 = i => MARGIN.l + i / (len - 1) * (w - MARGIN.l - MARGIN.r);
+  const Y2 = axesLog(g, w, h, MARGIN, lo2, hi2);
+  const pre = (D.comparison.residual ?? D.comparison[D.condition])?.residual?.slice(0, D.shift_step);
+  if (pre?.length) { const mu = pre.reduce((a, b) => a + b, 0) / pre.length; g.strokeStyle = css("--ink-2"); g.setLineDash([5, 4]);
+    g.beginPath(); g.moveTo(MARGIN.l, Y2(mu)); g.lineTo(w - MARGIN.r, Y2(mu)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = css("--ink-2"); g.fillText("pre-change mean", w - MARGIN.r - 90, Y2(mu) - 4); }
+  for (const [c, a] of series) { g.strokeStyle = css(cond(c)[0]); g.setLineDash(cond(c)[1]); g.lineWidth = 1.4; g.beginPath();
+    a.forEach((v, i) => i ? g.lineTo(X2(i), Y2(v)) : g.moveTo(X2(i), Y2(v))); g.stroke(); g.setLineDash([]); }
+  for (let i = 0; i < len; i += 200) { g.fillStyle = css("--ink-2"); g.fillText(i, X2(i) - 4, h - 3); }
+  if (D.changes) for (const [c] of series) {  // change / reversion step of each condition, from its own episode lengths
+    const eps = C[c].episodes; let t = 0;
+    eps.forEach((e, i) => { const prev = eps[i - 1];
+      if (prev && prev.phase !== e.phase) { g.fillStyle = css(cond(c)[0]); g.fillText(e.phase === 1 ? "▲" : "▼", X2(t) - 4, MARGIN.t + 10); }
+      t += e.steps; });
+  }
+  drawPhaseTable();
+}
+function drawPhaseTable() {
+  const card = $("phaseCard"); card.hidden = !(SUMMARY && Object.keys(SUMMARY).some(k => k.endsWith(".reverted.success")));
+  if (card.hidden) return;
+  const conds = Object.keys(SUMMARY).filter(k => k.endsWith(".reverted.success")).map(k => k.slice(0, -17)).filter(c => cond(c));
+  const ms = (k, pct) => { const v = SUMMARY[k]; if (!v || v.mean == null) return "—";
+    const f = x => pct ? (100 * x).toFixed(0) + "%" : (Math.abs(x) < 1e-2 && x !== 0 ? x.toExponential(1) : x.toFixed(1));
+    const n = v.values.filter(x => x == null).length; return f(v.mean) + (v.values.length > 1 ? " ± " + f(v.std) : "") + (n ? ` (${n} none)` : ""); };
+  const cols = [["success: original", "original.success", 1], ["changed", "changed.success", 1], ["reverted", "reverted.success", 1],
+    ["return: original", "original.return"], ["changed", "changed.return"], ["reverted", "reverted.return"],
+    ["1st ep. after change", "changed.first_episode_success", 1], ["1st ep. after reversion", "reverted.first_episode_success", 1],
+    ["reversion: 1st ep. return", "reverted.first_episode_return"], ["detect delay: change", "changed.detection_delay"],
+    ["reversion", "reverted.detection_delay"], ["steps to 1st success: change", "changed.steps_to_first_success"],
+    ["reversion", "reverted.steps_to_first_success"], ["adapting at reversion", "reverted.adapting_at_change", 1],
+    ["held-out end of changed: orig. dyn", "changed.end_heldout.old_dynamics"], ["rotated dyn", "changed.end_heldout.new_dynamics"],
+    ["end of reverted: orig. dyn", "reverted.end_heldout.old_dynamics"], ["rotated dyn", "reverted.end_heldout.new_dynamics"],
+    ["fine-tunes", "n_finetunes"], ["fine-tune s", "finetune_seconds_total"]];
+  $("phaseTable").innerHTML = "<tr><th>condition</th>" + cols.map(c => `<th>${c[0]}</th>`).join("") + "</tr>" +
+    conds.map(c => `<tr><td>${cond(c)[2]}</td>` + cols.map(([, k, p]) => `<td>${ms(`${c}.${k}`, p)}</td>`).join("") + "</tr>").join("");
+}
+function drawAggTable() {
+  if (!SUMMARY) return;
+  const get = k => SUMMARY[k], ms = (k, pct) => { const v = get(k); if (!v || v.mean == null) return "—";
+    const f = x => pct ? (100 * x).toFixed(0) + "%" : (Math.abs(x) < 1e-2 && x !== 0 ? x.toExponential(1) : x.toFixed(1));
+    const n = v.values.filter(x => x == null).length; return f(v.mean) + (v.values.length > 1 ? " ± " + f(v.std) : "") + (n ? ` (${n} never)` : ""); };
+  const conds = Object.keys(SUMMARY).filter(k => k.endsWith(".post_shift_success") && !k.startsWith("model_eval")).map(k => k.slice(0, -19)).filter(c => cond(c));
+  if (!conds.length) return;
+  const cols = [["pre-change success", "pre_shift_success", true], ["post-change success", "post_shift_success", true],
+    ["post-change return", "post_shift_return"], ["episodes to recover", "episodes_to_recover"], ["fine-tunes", "n_finetunes"],
+    ["detection delay (steps)", "online_detection_delay"], ["decision ms", "decision_ms"],
+    ...(get(`${conds[0]}.first_post_success`) ? [["1st post-change episode success", "first_post_success", true],
+      ["steps change→1st fine-tune", "first_adapt_delay"], ["steps change→1st success", "steps_to_first_success"],
+      ["fine-tune s total", "finetune_seconds_total"]] : [])];
+  let html = "<tr><th>condition</th>" + cols.map(c => `<th>${c[0]}</th>`).join("") + "<th>new-dyn 1-step MSE</th><th>new-dyn 10-step</th><th>old-dyn 1-step MSE</th></tr>";
+  for (const c of conds) html += `<tr><td>${cond(c)[2]}</td>` + cols.map(([, k, p]) => `<td>${ms(`${c}.${k}`, p)}</td>`).join("") +
+    `<td>${ms(`model_eval.${c}.post_shift.h1`)}</td><td>${ms(`model_eval.${c}.post_shift.h10`)}</td><td>${ms(`model_eval.${c}.pre_shift.h1`)}</td></tr>`;
+  $("aggTable").innerHTML = html; $("aggCard").hidden = false;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,4898 @@
+{
+  "config": {
+    "seed": 0,
+    "env": {
+      "arena": 2.0,
+      "max_steps": 100,
+      "goal_radius": 0.15,
+      "action_cost": 0.01,
+      "dynamics": {
+        "gain": 1.0,
+        "drag": 0.5,
+        "dt": 0.1,
+        "process_noise": 0.02
+      }
+    },
+    "model": {
+      "n_members": 5,
+      "hidden": 128,
+      "layers": 2,
+      "lr": 0.001,
+      "epochs": 60,
+      "batch_size": 256,
+      "holdout_frac": 0.1,
+      "wall_clip_predictions": true,
+      "train_exclude_walls": true,
+      "arena": 2.0
+    },
+    "planner": {
+      "horizon": 15,
+      "n_candidates": 256,
+      "n_elites": 25,
+      "iterations": 4,
+      "init_std": 0.6,
+      "action_cost": 0.01
+    },
+    "detector": {
+      "drift": 0.5,
+      "threshold": 10.0
+    },
+    "adapt": {
+      "min_new": 100,
+      "every": 100,
+      "max_new": 500,
+      "epochs": 40,
+      "lr": 0.001
+    },
+    "data": {
+      "pretrain_episodes": 30
+    },
+    "experiment": {
+      "agent_seeds": [
+        0,
+        1,
+        2
+      ],
+      "eval_seed_base": 50000,
+      "n_eval_episodes": 30,
+      "tune_seed_base": 60000,
+      "n_tune_episodes": 20,
+      "online_episodes": 15,
+      "online_initial_random": 1
+    },
+    "shift": {
+      "drag": 1.5,
+      "gain": 0.6
+    },
+    "shift_experiment": {
+      "calib_episodes": 5,
+      "episodes": 30,
+      "shift_episode": 8,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  "conditions": {
+    "random": [
+      {
+        "seed": 50000,
+        "return": -328.9164827676441,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.4791084749491206,
+        "mean_plan_ms": 0.0015845207963138819
+      },
+      {
+        "seed": 50001,
+        "return": -320.22704109885404,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.4019915687502342,
+        "mean_plan_ms": 0.0015829340554773808
+      },
+      {
+        "seed": 50002,
+        "return": -188.5655694707363,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.207919588330534,
+        "mean_plan_ms": 0.0015108834486454725
+      },
+      {
+        "seed": 50003,
+        "return": -263.9491094921885,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.6108752130989505,
+        "mean_plan_ms": 0.001538287615403533
+      },
+      {
+        "seed": 50004,
+        "return": -377.26217502614674,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.0430056443141313,
+        "mean_plan_ms": 0.001526618143543601
+      },
+      {
+        "seed": 50005,
+        "return": -269.663703914907,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.7040082250676876,
+        "mean_plan_ms": 0.0015028961934149265
+      },
+      {
+        "seed": 50006,
+        "return": -216.56180992403873,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.274500806250676,
+        "mean_plan_ms": 0.001512917224317789
+      },
+      {
+        "seed": 50007,
+        "return": -255.7151793559647,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.1612252697457204,
+        "mean_plan_ms": 0.0015258148778229952
+      },
+      {
+        "seed": 50008,
+        "return": -252.47371523566693,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.6237427152562525,
+        "mean_plan_ms": 0.0015037273988127708
+      },
+      {
+        "seed": 50009,
+        "return": -107.65707252309457,
+        "steps": 100,
+        "success": false,
+        "final_distance": 0.3848287714995881,
+        "mean_plan_ms": 0.0015124783385545015
+      },
+      {
+        "seed": 50010,
+        "return": -213.60337404189966,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.9276322209763055,
+        "mean_plan_ms": 0.0015687698032706976
+      },
+      {
+        "seed": 50011,
+        "return": -250.76136433280968,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.6093237788317056,
+        "mean_plan_ms": 0.0015687162522226572
+      },
+      {
+        "seed": 50012,
+        "return": -254.05384985323522,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.404745752141601,
+        "mean_plan_ms": 0.001523277023807168
+      },
+      {
+        "seed": 50013,
+        "return": -247.33096034217746,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.144397470889192,
+        "mean_plan_ms": 0.0014871417079120874
+      },
+      {
+        "seed": 50014,
+        "return": -186.01915230098462,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.5809482711743592,
+        "mean_plan_ms": 0.0014816888142377138
+      },
+      {
+        "seed": 50015,
+        "return": -123.47540802057506,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.3072744882564309,
+        "mean_plan_ms": 0.0014829612337052822
+      },
+      {
+        "seed": 50016,
+        "return": -99.44209980601619,
+        "steps": 100,
+        "success": false,
+        "final_distance": 0.534010103955571,
+        "mean_plan_ms": 0.0015219778288155794
+      },
+      {
+        "seed": 50017,
+        "return": -170.34169412241062,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.303190824737441,
+        "mean_plan_ms": 0.0015223596710711718
+      },
+      {
+        "seed": 50018,
+        "return": -127.69446233665577,
+        "steps": 100,
+        "success": false,
+        "final_distance": 0.5106457651747707,
+        "mean_plan_ms": 0.001511676236987114
+      },
+      {
+        "seed": 50019,
+        "return": -281.59329251625644,
+        "steps": 100,
+        "success": false,
+        "final_distance": 3.305542155616674,
+        "mean_plan_ms": 0.0015207973774522543
+      },
+      {
+        "seed": 50020,
+        "return": -175.14984489542394,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.5623145912287648,
+        "mean_plan_ms": 0.0015895534306764603
+      },
+      {
+        "seed": 50021,
+        "return": -241.1034965366563,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.2416993033529455,
+        "mean_plan_ms": 0.0015095784328877926
+      },
+      {
+        "seed": 50022,
+        "return": -235.9223238350182,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.903004122857777,
+        "mean_plan_ms": 0.0015482737217098475
+      },
+      {
+        "seed": 50023,
+        "return": -132.8430996295155,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.4617569527824237,
+        "mean_plan_ms": 0.001587861916050315
+      },
+      {
+        "seed": 50024,
+        "return": -163.60202469573358,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.8141748686836339,
+        "mean_plan_ms": 0.001521219965070486
+      },
+      {
+        "seed": 50025,
+        "return": -105.15519452265404,
+        "steps": 79,
+        "success": true,
+        "final_distance": 0.13638327639574224,
+        "mean_plan_ms": 0.0015247725186091435
+      },
+      {
+        "seed": 50026,
+        "return": -189.10014442241544,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.248593460319948,
+        "mean_plan_ms": 0.0015091360546648502
+      },
+      {
+        "seed": 50027,
+        "return": -151.0581817114866,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.287126338834916,
+        "mean_plan_ms": 0.0015187915414571762
+      },
+      {
+        "seed": 50028,
+        "return": -248.12758374045137,
+        "steps": 100,
+        "success": false,
+        "final_distance": 2.558208486635449,
+        "mean_plan_ms": 0.0015224306844174862
+      },
+      {
+        "seed": 50029,
+        "return": -96.0176104453277,
+        "steps": 100,
+        "success": false,
+        "final_distance": 1.415754394986171,
+        "mean_plan_ms": 0.0015575008001178503
+      }
+    ],
+    "pd": [
+      {
+        "seed": 50000,
+        "return": -52.312487572462985,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.10380523393184879,
+        "mean_plan_ms": 0.0032583329205711684
+      },
+      {
+        "seed": 50001,
+        "return": -56.77470027948095,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.08341235196930748,
+        "mean_plan_ms": 0.0032512834877707064
+      },
+      {
+        "seed": 50002,
+        "return": -19.64551991020812,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1217514985262136,
+        "mean_plan_ms": 0.0031467948463701064
+      },
+      {
+        "seed": 50003,
+        "return": -38.52606370905299,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.09065320226091114,
+        "mean_plan_ms": 0.0031172573842384197
+      },
+      {
+        "seed": 50004,
+        "return": -61.68737822017496,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.10397459777250703,
+        "mean_plan_ms": 0.0031223352035057955
+      },
+      {
+        "seed": 50005,
+        "return": -33.074677808101136,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.10796304418125272,
+        "mean_plan_ms": 0.0031142465203352595
+      },
+      {
+        "seed": 50006,
+        "return": -36.76326894127384,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12341879360785507,
+        "mean_plan_ms": 0.0030993698881222652
+      },
+      {
+        "seed": 50007,
+        "return": -47.930464280045086,
+        "steps": 28,
+        "success": true,
+        "final_distance": 0.14812791984468943,
+        "mean_plan_ms": 0.0030924067167299135
+      },
+      {
+        "seed": 50008,
+        "return": -32.59771552706737,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10932841523197437,
+        "mean_plan_ms": 0.003109112955056704
+      },
+      {
+        "seed": 50009,
+        "return": -32.556451977070246,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.14886859797658406,
+        "mean_plan_ms": 0.0030966103076934814
+      },
+      {
+        "seed": 50010,
+        "return": -21.063148951935588,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.14647160123181194,
+        "mean_plan_ms": 0.003138712296883265
+      },
+      {
+        "seed": 50011,
+        "return": -49.68536882797162,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.12608742793534744,
+        "mean_plan_ms": 0.003147295986612638
+      },
+      {
+        "seed": 50012,
+        "return": -34.172252621019986,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10008483756084732,
+        "mean_plan_ms": 0.0032068077976313922
+      },
+      {
+        "seed": 50013,
+        "return": -35.802207212500825,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1465496262273413,
+        "mean_plan_ms": 0.0033250637352466583
+      },
+      {
+        "seed": 50014,
+        "return": -21.08647401274807,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.12785981192633397,
+        "mean_plan_ms": 0.003204221138730645
+      },
+      {
+        "seed": 50015,
+        "return": -30.99093686545471,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11035196460791827,
+        "mean_plan_ms": 0.003204991420110067
+      },
+      {
+        "seed": 50016,
+        "return": -28.215177617572422,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10124372331544199,
+        "mean_plan_ms": 0.0033001754976188145
+      },
+      {
+        "seed": 50017,
+        "return": -13.45519971660867,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.12570795392629622,
+        "mean_plan_ms": 0.0032128365192976263
+      },
+      {
+        "seed": 50018,
+        "return": -35.795870984556636,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13897678373331065,
+        "mean_plan_ms": 0.0032691929775934955
+      },
+      {
+        "seed": 50019,
+        "return": -35.73544013314627,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10962874212502215,
+        "mean_plan_ms": 0.0031827008709884607
+      },
+      {
+        "seed": 50020,
+        "return": -25.459535133730782,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09646769898182506,
+        "mean_plan_ms": 0.003189294754217068
+      },
+      {
+        "seed": 50021,
+        "return": -32.142852580304556,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11155706570803922,
+        "mean_plan_ms": 0.0032134848879650235
+      },
+      {
+        "seed": 50022,
+        "return": -19.52840221446905,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10917727805626186,
+        "mean_plan_ms": 0.003468289616562071
+      },
+      {
+        "seed": 50023,
+        "return": -18.08200535217752,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.11186986815535686,
+        "mean_plan_ms": 0.003266579005867243
+      },
+      {
+        "seed": 50024,
+        "return": -11.015747902126495,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.1246483176000628,
+        "mean_plan_ms": 0.003247603993205463
+      },
+      {
+        "seed": 50025,
+        "return": -27.924992551491115,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.1238475320715977,
+        "mean_plan_ms": 0.0032264000290761824
+      },
+      {
+        "seed": 50026,
+        "return": -12.709145998560471,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.1369982676509937,
+        "mean_plan_ms": 0.003213302561027162
+      },
+      {
+        "seed": 50027,
+        "return": -28.266145927100506,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13551724294217107,
+        "mean_plan_ms": 0.0032102385454851647
+      },
+      {
+        "seed": 50028,
+        "return": -25.406103395265237,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1030711539408736,
+        "mean_plan_ms": 0.0032280471974185537
+      },
+      {
+        "seed": 50029,
+        "return": -14.627681875085782,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.1306918195852717,
+        "mean_plan_ms": 0.0032037819942666423
+      }
+    ],
+    "cem_true_dynamics": [
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.16682787473496,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.14554907972868908,
+        "mean_plan_ms": 2.2529123661418757,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.550383984559005,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.14235177317049658,
+        "mean_plan_ms": 2.209878814028343,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -20.02264806559858,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12461912993770964,
+        "mean_plan_ms": 2.2019247047691826,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.036959371661005,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.1290806224696726,
+        "mean_plan_ms": 2.1837207626689366,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.8706598783813,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.13723422574462427,
+        "mean_plan_ms": 2.1973168089364967,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.17905903151814,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10416813056900517,
+        "mean_plan_ms": 2.235296846871885,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.7439954026448,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12105333966786423,
+        "mean_plan_ms": 2.197738647317657,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.93024848733317,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.12806458092087844,
+        "mean_plan_ms": 2.231318925121992,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.64058103338171,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10453969405115598,
+        "mean_plan_ms": 2.230950192405054,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.16001723052507,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11246220109775558,
+        "mean_plan_ms": 2.272876651169589,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.453052254331077,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10018148829418848,
+        "mean_plan_ms": 2.222397586923431,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.66513278737436,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.11343773843893125,
+        "mean_plan_ms": 2.3113346373241757,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.663246038028795,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1431563435721589,
+        "mean_plan_ms": 2.2746923451240244,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.789680011143034,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11737287320758664,
+        "mean_plan_ms": 2.3010063853759606,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.698083682792458,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.09548489660645831,
+        "mean_plan_ms": 2.2201189505202428,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.73234918305912,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.14609776115849965,
+        "mean_plan_ms": 2.2327916813082993,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.730190667267937,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13863040529622403,
+        "mean_plan_ms": 2.1824427385581657,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.622565714606333,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.12584494275514552,
+        "mean_plan_ms": 2.1753633886368737,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.37774766210841,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.10008243033930123,
+        "mean_plan_ms": 2.2018395528128303,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.6259288237852,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1347627725741433,
+        "mean_plan_ms": 2.2191731662202914,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.8807826150563,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11031275806090403,
+        "mean_plan_ms": 2.2191163734532893,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.223303418848815,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.14068650908908986,
+        "mean_plan_ms": 2.2086528333602473,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -19.890090663291588,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10579308915812508,
+        "mean_plan_ms": 2.2162081884397637,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.517353091052733,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.10520964748120383,
+        "mean_plan_ms": 2.1879791980609298,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.1047368311803,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10829409779986428,
+        "mean_plan_ms": 2.183404566227075,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.687263272900527,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14159498077339672,
+        "mean_plan_ms": 2.253648384636187,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.91380389164267,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.13774434390243606,
+        "mean_plan_ms": 2.1926346645854853,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.866580333005253,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14506266849685476,
+        "mean_plan_ms": 2.2449545997559377,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.164280973083553,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.14216645652685753,
+        "mean_plan_ms": 2.197567428950043,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.908684927899376,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13725451330374175,
+        "mean_plan_ms": 2.183354265677432,
+        "refit": null
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.461122777969265,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10686374595743674,
+        "mean_plan_ms": 2.2286761274200773,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.47637238606628,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.13652906073297444,
+        "mean_plan_ms": 2.197299440013012,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.873651543308117,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11472800916427976,
+        "mean_plan_ms": 2.194404923578813,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.14668251509177,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.13758481402222195,
+        "mean_plan_ms": 2.196478592749271,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.92204752776432,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.13725701645352886,
+        "mean_plan_ms": 2.1959138995346925,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.14668540145694,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10295121440915984,
+        "mean_plan_ms": 2.199432346969843,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.81119455167172,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13417465308061993,
+        "mean_plan_ms": 2.211693839993901,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.85546071297158,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.12061462834989328,
+        "mean_plan_ms": 2.2081694533598832,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.539264107563056,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10996916734795112,
+        "mean_plan_ms": 2.192338216655816,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.05613115511369,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10834220256150953,
+        "mean_plan_ms": 2.210315648251428,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.478053653897607,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10251319140612558,
+        "mean_plan_ms": 2.2075114538893104,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.571857572734444,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.11710425549751319,
+        "mean_plan_ms": 2.2524703902402714,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.72629208597174,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13597238135760734,
+        "mean_plan_ms": 2.195261199421321,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.73016023988913,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11192976390555218,
+        "mean_plan_ms": 2.299549801346774,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.765146905518716,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.09705522329931444,
+        "mean_plan_ms": 2.208539767057768,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.638939734735274,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.1462795622136202,
+        "mean_plan_ms": 2.2260139715702585,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.796961601029153,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13839602976453994,
+        "mean_plan_ms": 2.240098978897246,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.654738654493785,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.12340710925070612,
+        "mean_plan_ms": 2.216708341923853,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.528558067219436,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.10699305769826167,
+        "mean_plan_ms": 2.198299405992859,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.6085909030018,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13072714937264696,
+        "mean_plan_ms": 2.215626577918346,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.952324172250236,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11093690255207905,
+        "mean_plan_ms": 2.212552096655903,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.1395775406992,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.1356303767655667,
+        "mean_plan_ms": 2.2042829126197225,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.105756942586094,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11122253868086646,
+        "mean_plan_ms": 2.198279729955608,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.431857725536037,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.1074963054494613,
+        "mean_plan_ms": 2.2262020502239466,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.085176087099411,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10746551738093596,
+        "mean_plan_ms": 2.1970539203132775,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.530823579650768,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13987401574243596,
+        "mean_plan_ms": 2.193124995202474,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.893377343647948,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.13561117087086944,
+        "mean_plan_ms": 2.1853038958986017,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.93275538487642,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14565056954198136,
+        "mean_plan_ms": 2.2119982168078423,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.31066480071815,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1456067538761982,
+        "mean_plan_ms": 2.1918491416034245,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.942227656837154,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.14098530469142512,
+        "mean_plan_ms": 2.2358451711220875,
+        "refit": null
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.358787672229255,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10424811141642226,
+        "mean_plan_ms": 2.2211841968519073,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.570342516054765,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.13824562837863522,
+        "mean_plan_ms": 2.2211692776181735,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.992096868347268,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12623791395881825,
+        "mean_plan_ms": 2.177680593117007,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -38.998247567542045,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.1265474129423184,
+        "mean_plan_ms": 2.210365707503149,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -64.01363934757056,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.1371121469817688,
+        "mean_plan_ms": 2.208751409004132,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.288915368406634,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10514067676671097,
+        "mean_plan_ms": 2.2287013610669724,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.75747940695859,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12903678537311547,
+        "mean_plan_ms": 2.2192596807144582,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.80051283172783,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.12025946909970178,
+        "mean_plan_ms": 2.2291523155531494,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.54744248245526,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10741493713918213,
+        "mean_plan_ms": 2.2997500491328537,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -32.980949633281085,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1078706534340166,
+        "mean_plan_ms": 2.2420320310629904,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.536514301807138,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10463302840029774,
+        "mean_plan_ms": 2.2181685516526075,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.61777093704975,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.12420077172615201,
+        "mean_plan_ms": 2.193881615605806,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.7279317211214,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.14152196201833298,
+        "mean_plan_ms": 2.1843747683585835,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.85273793724829,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12262256465128683,
+        "mean_plan_ms": 2.1880801292494514,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.86683505284994,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10179602969446992,
+        "mean_plan_ms": 2.1977261362952136,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.87561451643004,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.09359351063905937,
+        "mean_plan_ms": 2.19028830062598,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.63111386524168,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13426160741368304,
+        "mean_plan_ms": 2.21739062302125,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.601428024989014,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.11712363534450758,
+        "mean_plan_ms": 2.1986919972631664,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.34951893553748,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.10737914457812411,
+        "mean_plan_ms": 2.2136141433966934,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.88990338987863,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1387793749048435,
+        "mean_plan_ms": 2.202679501631512,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -26.06763707644001,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.1166060922861691,
+        "mean_plan_ms": 2.2141874263373515,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.12968209609355,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.1343621046566834,
+        "mean_plan_ms": 2.1907795938507966,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.026136764647156,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11091649935412354,
+        "mean_plan_ms": 2.227113138706911,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.463318900958686,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.10422314234257932,
+        "mean_plan_ms": 2.2357063076924533,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.14514752995551,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10799346489061798,
+        "mean_plan_ms": 2.1913381197544584,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.6287678177073,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14645009312228108,
+        "mean_plan_ms": 2.232411218321194,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.821649309171676,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.1307538129243395,
+        "mean_plan_ms": 2.4777524282827095,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.886456926516875,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14493369589214272,
+        "mean_plan_ms": 2.228851546533406,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.296380263538985,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.14144330657772144,
+        "mean_plan_ms": 2.2087600525645983,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.899363229060592,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13178351738357086,
+        "mean_plan_ms": 2.1911366493441164,
+        "refit": null
+      }
+    ],
+    "cem_learned": [
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.14900676356674,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.1377285434986132,
+        "mean_plan_ms": 26.257815254696954,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.55212877269174,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.13577451986310013,
+        "mean_plan_ms": 27.092619715404,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -20.06021629783894,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11961302168277718,
+        "mean_plan_ms": 26.405533803405152,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.06837386756352,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.1190888298461728,
+        "mean_plan_ms": 25.501063153906554,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.853188567189235,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.1268433300937376,
+        "mean_plan_ms": 25.55570563223834,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.15279196930148,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09513043536580075,
+        "mean_plan_ms": 25.6395850252981,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.63032750945764,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1068131628353288,
+        "mean_plan_ms": 25.234956809212097,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.91274649317388,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.13210183361941782,
+        "mean_plan_ms": 25.881560338693188,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.54017660787431,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.13799253349761526,
+        "mean_plan_ms": 26.770444842986763,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.144342760357354,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1021830029598623,
+        "mean_plan_ms": 25.462323714656613,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.54360812826393,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10891356747092044,
+        "mean_plan_ms": 25.908007683359425,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.71063454463156,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.12178262641705463,
+        "mean_plan_ms": 25.925840127221758,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.716202746933405,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12521264517304226,
+        "mean_plan_ms": 25.345522453650258,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.85140415036435,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09853003223127307,
+        "mean_plan_ms": 25.288761338183228,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.747159016510825,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.09315914752922289,
+        "mean_plan_ms": 26.0142876123566,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.63491938447876,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.14792321753725263,
+        "mean_plan_ms": 25.281618000008166,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.596298850392163,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13421259477505412,
+        "mean_plan_ms": 25.536845520643208,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.647277226073752,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.1248185680669626,
+        "mean_plan_ms": 25.30031717227151,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.4344501222913,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.10409569011238272,
+        "mean_plan_ms": 26.108250090921366,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.878255277802566,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.14516158904880144,
+        "mean_plan_ms": 25.80312822605125,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.857613440454053,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09977515625935515,
+        "mean_plan_ms": 25.362954833932843,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.15262196161741,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12163154124636852,
+        "mean_plan_ms": 25.71307457886481,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -19.949559769657554,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10215676918177852,
+        "mean_plan_ms": 25.29747032981721,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.517677006361932,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.11296000694782729,
+        "mean_plan_ms": 25.40284165297635,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.096712314659266,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10069747752086897,
+        "mean_plan_ms": 25.3687697901007,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.43973366052585,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.12443374421746366,
+        "mean_plan_ms": 25.835320652138602,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.867031656293376,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.12940270178632512,
+        "mean_plan_ms": 25.29079147258445,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -29.021955230443947,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09685631239363905,
+        "mean_plan_ms": 25.761335161708605,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.098726499108853,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1302871456317079,
+        "mean_plan_ms": 25.681275702525106,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.938750167174641,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.14341305282803413,
+        "mean_plan_ms": 25.43296066707828,
+        "refit": null,
+        "pretrain_interactions": 2905
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.35412245741194,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10208534948474221,
+        "mean_plan_ms": 26.22022308904918,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.44328845191576,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.12415290412137678,
+        "mean_plan_ms": 25.809459541051183,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.892384385603215,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11112749298034898,
+        "mean_plan_ms": 25.950510160154884,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.134381949990015,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.13366244419425868,
+        "mean_plan_ms": 26.75181326749562,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.69494835415015,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.08418454228989966,
+        "mean_plan_ms": 25.794966615891706,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -33.85813090628,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.11963899448901955,
+        "mean_plan_ms": 26.94546004615562,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.79929664448432,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09772772582141562,
+        "mean_plan_ms": 26.367746714430933,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -49.02549462971082,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.11791413370325281,
+        "mean_plan_ms": 25.916979925161034,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.36978227582156,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10276408312235005,
+        "mean_plan_ms": 25.904564142155532,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.020245302563026,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.08492363969875519,
+        "mean_plan_ms": 26.284503154993917,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.427102529029135,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.09879047685012728,
+        "mean_plan_ms": 26.20524793482301,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.50575362147697,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10927577226851178,
+        "mean_plan_ms": 26.27467340414202,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.6712905697423,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11271208243355427,
+        "mean_plan_ms": 25.919381493272688,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.80040925183227,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10751429754070514,
+        "mean_plan_ms": 26.070905312036093,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.651295503461647,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.13374827031817707,
+        "mean_plan_ms": 25.780112482607365,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.59474930514816,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12327935631397642,
+        "mean_plan_ms": 29.31930395910361,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.627810421327673,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12419371362148413,
+        "mean_plan_ms": 25.730038081140567,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.598450103854214,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.11449264413243418,
+        "mean_plan_ms": 26.073356540614945,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.419573052380805,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.09208552072424528,
+        "mean_plan_ms": 26.67224842675582,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.577410994369835,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13145443589423858,
+        "mean_plan_ms": 26.015867067214387,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.830951338372273,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09621391438847977,
+        "mean_plan_ms": 26.13346534781158,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -32.993347578173115,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12394063782491493,
+        "mean_plan_ms": 26.805524263181724,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.023217533124186,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.09957230914729998,
+        "mean_plan_ms": 25.788744007946836,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.38659708191122,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.09683549329587872,
+        "mean_plan_ms": 25.70424591540359,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.106928824433854,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10130002719665913,
+        "mean_plan_ms": 26.02311034741647,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.522395699666895,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.1143393600416953,
+        "mean_plan_ms": 26.003487170268983,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.876965415722943,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.12691701082254292,
+        "mean_plan_ms": 27.70732846521937,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.781830500968756,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13268678493127475,
+        "mean_plan_ms": 26.291121571810674,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.244268276998465,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12354316673758324,
+        "mean_plan_ms": 25.527650811931206,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.900137393463977,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13050599289222473,
+        "mean_plan_ms": 26.21459506917745,
+        "refit": null,
+        "pretrain_interactions": 2953
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.20215507252818,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.14847764546106829,
+        "mean_plan_ms": 25.727756957833964,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.59297378293905,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.1384917485191511,
+        "mean_plan_ms": 26.84175910690101,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -20.032830731187694,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1202387274114872,
+        "mean_plan_ms": 25.578261951782874,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.00493161531043,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.12438106831154139,
+        "mean_plan_ms": 25.565069474935257,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.75126999481684,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.11615026400843458,
+        "mean_plan_ms": 26.38123754489546,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.16724225146292,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14903961009512773,
+        "mean_plan_ms": 25.767356931717824,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.6776214467671,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10919660595469623,
+        "mean_plan_ms": 25.470757964425363,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -49.06064440471519,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.12444729921986072,
+        "mean_plan_ms": 25.641050306148827,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.445720135511486,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10613067801809761,
+        "mean_plan_ms": 25.61681399283071,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.075502628093446,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09117233176521101,
+        "mean_plan_ms": 25.95916509968587,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.495273079996764,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.11115488594423285,
+        "mean_plan_ms": 27.797473456964575,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.47767039945835,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.11841588428645586,
+        "mean_plan_ms": 26.318532226967715,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.61991737550729,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1323830766122636,
+        "mean_plan_ms": 26.05855292103325,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.93523040786421,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11434569804222826,
+        "mean_plan_ms": 26.044721142030678,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.62238892728202,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.1469169854724735,
+        "mean_plan_ms": 27.474860550137237,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.744865007991216,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.10473007450979371,
+        "mean_plan_ms": 25.54687164723873,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.694055897347038,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11828671768618088,
+        "mean_plan_ms": 25.639256831103314,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.665901669773847,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.11859079730653334,
+        "mean_plan_ms": 25.35796298050425,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.54496345851036,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.11584000691894389,
+        "mean_plan_ms": 25.812736005280858,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.67431322335455,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13148663415621412,
+        "mean_plan_ms": 26.292365348826234,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.92485249865268,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10885814511828648,
+        "mean_plan_ms": 25.629388925153762,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.202433578350195,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13412090221709402,
+        "mean_plan_ms": 25.73046020309751,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.12666372542913,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11384666191369007,
+        "mean_plan_ms": 25.4973374650858,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.49995057104292,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.10802832912256918,
+        "mean_plan_ms": 25.930472812615335,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.10481613189413,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10374830911798168,
+        "mean_plan_ms": 25.322536807781194,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.413356296266794,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.12576542052717563,
+        "mean_plan_ms": 25.660985483504508,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.839049901915189,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.12927232938201155,
+        "mean_plan_ms": 25.386147050406127,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.817453346618066,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14441985950504796,
+        "mean_plan_ms": 25.900003702744193,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.121855157188218,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12382777076437876,
+        "mean_plan_ms": 25.598190464301123,
+        "refit": null,
+        "pretrain_interactions": 2887
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -15.016707629433428,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13439505749955,
+        "mean_plan_ms": 30.396134159269018,
+        "refit": null,
+        "pretrain_interactions": 2887
+      }
+    ],
+    "cem_learned_m1": [
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.01986687325486,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.11494563795223092,
+        "mean_plan_ms": 23.315406577051455,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.53140242712715,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.12242919833507793,
+        "mean_plan_ms": 23.560798184917076,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.93759265791918,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.13809069924709122,
+        "mean_plan_ms": 23.53229174623266,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -38.93194694274011,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10326408658033566,
+        "mean_plan_ms": 25.673860491504175,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.23582631535969,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.14347307767635425,
+        "mean_plan_ms": 23.297448269220006,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.12306360500931,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.10754779938555101,
+        "mean_plan_ms": 23.270699225933008,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.25796738396806,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.08939326936749604,
+        "mean_plan_ms": 23.406168268993497,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.52223287937081,
+        "steps": 28,
+        "success": true,
+        "final_distance": 0.05578512502338157,
+        "mean_plan_ms": 23.313805099210835,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.46974513986426,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.11167495557752691,
+        "mean_plan_ms": 23.07606833986938,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -32.83621480340531,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1052405505927077,
+        "mean_plan_ms": 23.656529877334833,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.53510193014639,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10854011338759023,
+        "mean_plan_ms": 23.127549259119075,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.54981392774054,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.13731118653278102,
+        "mean_plan_ms": 23.583118023816496,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.3095616265791,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.12859577256353,
+        "mean_plan_ms": 23.248620042577386,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -37.14998065200914,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.0787614930662863,
+        "mean_plan_ms": 23.133231811225414,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.42073195326834,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.07718347993126375,
+        "mean_plan_ms": 23.642797907814384,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.71007608897921,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.10350548716594668,
+        "mean_plan_ms": 26.216649999842048,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.60553354590364,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09196338853907421,
+        "mean_plan_ms": 23.38429676698676,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.42489402648679,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.11501804387557187,
+        "mean_plan_ms": 22.974053863435984,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.20004895231746,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11046462776523092,
+        "mean_plan_ms": 23.77986058127135,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.755516655053405,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13245339810090237,
+        "mean_plan_ms": 23.499945563694034,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.90706388977275,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10962736315666392,
+        "mean_plan_ms": 23.273659782717004,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -32.67110304373899,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.11989872935918865,
+        "mean_plan_ms": 25.41046568354511,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.04644208008682,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.08798007451652182,
+        "mean_plan_ms": 24.04574208915056,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.345900253353605,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.12770340459767535,
+        "mean_plan_ms": 23.317730378996778,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.181116704247898,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.1394101820074938,
+        "mean_plan_ms": 23.205201066208673,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.210207501244522,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.10581964984698124,
+        "mean_plan_ms": 23.212954513093624,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.794400901932011,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.10119989268580397,
+        "mean_plan_ms": 23.734902120743165,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.919532582339414,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.12843042676678962,
+        "mean_plan_ms": 23.09932961108406,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -25.767115845752837,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.11467955797014276,
+        "mean_plan_ms": 23.267045995453373,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -15.049389115617748,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.12433847417948732,
+        "mean_plan_ms": 23.002895772353643,
+        "refit": null
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -52.94173298119189,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.10554138749568179,
+        "mean_plan_ms": 23.675840484492223,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.53036435319449,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.1311424797916557,
+        "mean_plan_ms": 23.8428333432239,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.82245263954653,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.12440864522136334,
+        "mean_plan_ms": 23.53658129577525,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -38.76046051133771,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13703786811270996,
+        "mean_plan_ms": 24.078120164071713,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -64.05317707890151,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.0829876649357136,
+        "mean_plan_ms": 23.68689173599705,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.40117173157128,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11470229421164432,
+        "mean_plan_ms": 23.49877604865469,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.45359243162144,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.14531272551586916,
+        "mean_plan_ms": 23.61224667634815,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -49.29486498631937,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.09688956669388063,
+        "mean_plan_ms": 23.45194544338075,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.3834292401731,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1470936715220059,
+        "mean_plan_ms": 23.48976507782936,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.01916392746554,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.11026153892355842,
+        "mean_plan_ms": 23.74679007101804,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.30146444381567,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.123348356505269,
+        "mean_plan_ms": 23.36979357503532,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.44153587840558,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.11773292913518889,
+        "mean_plan_ms": 23.907848629945267,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.58143747322424,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09908064811945042,
+        "mean_plan_ms": 23.68462979883099,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.50254457604859,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.09574116520566156,
+        "mean_plan_ms": 23.73290012590587,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.340818130441587,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.08218565815155854,
+        "mean_plan_ms": 23.645224794745445,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.58861549605337,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11094228549945578,
+        "mean_plan_ms": 23.5957934637554,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.35444820357625,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.09298246730497037,
+        "mean_plan_ms": 23.68697104975581,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.590708740134424,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.11825543623881711,
+        "mean_plan_ms": 23.587106397220243,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.19960504302017,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11987056053860849,
+        "mean_plan_ms": 23.958139528986067,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.588796968385545,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.07463648025657317,
+        "mean_plan_ms": 23.532689132620224,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.68510467598858,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.1346986739439103,
+        "mean_plan_ms": 24.264213679682303,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.17250223919249,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.14285341534090187,
+        "mean_plan_ms": 23.894959939449716,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -19.72659514925199,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.11935982398874126,
+        "mean_plan_ms": 24.00417696335353,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.382203677623295,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.1308081016908577,
+        "mean_plan_ms": 23.646646877750754,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -11.045399357306172,
+        "steps": 16,
+        "success": true,
+        "final_distance": 0.14390926433265575,
+        "mean_plan_ms": 23.85628374031512,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.373055709440433,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.08245862876760277,
+        "mean_plan_ms": 23.42703080047732,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.907946809592843,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.11240609024523524,
+        "mean_plan_ms": 24.34551965116578,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.796501268240814,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.1415515452633928,
+        "mean_plan_ms": 23.54207431452106,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.014496667435424,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.08586616855910138,
+        "mean_plan_ms": 27.646186462204373,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.941833907116738,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.10885712872968391,
+        "mean_plan_ms": 23.409752188146943,
+        "refit": null
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -52.86744605730184,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.1166424487370269,
+        "mean_plan_ms": 23.522975694002778,
+        "refit": null
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -58.11294776174417,
+        "steps": 33,
+        "success": true,
+        "final_distance": 0.13195224767096392,
+        "mean_plan_ms": 23.624863694280837,
+        "refit": null
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.963113310204633,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10957057151291644,
+        "mean_plan_ms": 23.741492036996142,
+        "refit": null
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -38.987298506137485,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10227837414681966,
+        "mean_plan_ms": 23.331298000322512,
+        "refit": null
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.48887721320619,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.09333735791138063,
+        "mean_plan_ms": 24.042821838520467,
+        "refit": null
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -33.881664320015524,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.09159204857119455,
+        "mean_plan_ms": 23.325440185347006,
+        "refit": null
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.31398561179558,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1017186888152405,
+        "mean_plan_ms": 23.385025076568127,
+        "refit": null
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.88440551988263,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.14242328899163254,
+        "mean_plan_ms": 23.549933861619955,
+        "refit": null
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.4753875814265,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11830313748595164,
+        "mean_plan_ms": 23.243932622090842,
+        "refit": null
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -32.72805756063493,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.0747303563411712,
+        "mean_plan_ms": 23.462231536395848,
+        "refit": null
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.300664942486872,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.14405045816064468,
+        "mean_plan_ms": 23.411174565331923,
+        "refit": null
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.17978774658277,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.12451893039528268,
+        "mean_plan_ms": 23.630144423805177,
+        "refit": null
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.3786346379517,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.10743296099424748,
+        "mean_plan_ms": 23.974575204774737,
+        "refit": null
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.48457046442052,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1365703581511197,
+        "mean_plan_ms": 23.2075817277655,
+        "refit": null
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.24211957379097,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.1433982070434255,
+        "mean_plan_ms": 23.553758730964834,
+        "refit": null
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.973101905738034,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.09677842299889557,
+        "mean_plan_ms": 23.199631767347455,
+        "refit": null
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.449726418005117,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13575382803210717,
+        "mean_plan_ms": 23.632159390810717,
+        "refit": null
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.577131128512612,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.11489870570821403,
+        "mean_plan_ms": 23.275347232508164,
+        "refit": null
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.35969060067582,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.14588339236582026,
+        "mean_plan_ms": 26.34684135689615,
+        "refit": null
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.652313971491,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13869412791758592,
+        "mean_plan_ms": 23.6375432757016,
+        "refit": null
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.8820333542789,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.1212151063058854,
+        "mean_plan_ms": 23.408606911644988,
+        "refit": null
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.09012061633174,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12755784032526102,
+        "mean_plan_ms": 24.11853296022552,
+        "refit": null
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -19.83205487052376,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.12141518738699919,
+        "mean_plan_ms": 23.317737301113084,
+        "refit": null
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.34660879639458,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.09907177305732673,
+        "mean_plan_ms": 24.34147358259284,
+        "refit": null
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -10.94080011697774,
+        "steps": 16,
+        "success": true,
+        "final_distance": 0.13715696247577996,
+        "mean_plan_ms": 23.566622381622437,
+        "refit": null
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.281777975214847,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.12898554277498858,
+        "mean_plan_ms": 23.487278450788423,
+        "refit": null
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.713816355359453,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.0811080750228515,
+        "mean_plan_ms": 24.030107881545145,
+        "refit": null
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.975741288060952,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.09277290616149983,
+        "mean_plan_ms": 23.33889855578056,
+        "refit": null
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.008620415356088,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.06996212386472321,
+        "mean_plan_ms": 23.595938425777213,
+        "refit": null
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.989524289267285,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.1201048969114343,
+        "mean_plan_ms": 23.434222274873818,
+        "refit": null
+      }
+    ],
+    "cem_online": [
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.56254821083469,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10372265831198513,
+        "mean_plan_ms": 26.41849864214178,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.69413642224263,
+        "steps": 33,
+        "success": true,
+        "final_distance": 0.108216312867363,
+        "mean_plan_ms": 25.6965214485359,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -20.109400918470563,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12753760040768697,
+        "mean_plan_ms": 26.204035661759832,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.396655681425216,
+        "steps": 28,
+        "success": true,
+        "final_distance": 0.09701691078171748,
+        "mean_plan_ms": 25.527596793835983,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.917564195207625,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.12065749477914516,
+        "mean_plan_ms": 25.459687559244532,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.10707377110983,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13929104429409578,
+        "mean_plan_ms": 25.64875721303827,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.831303704865846,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12611322535985672,
+        "mean_plan_ms": 26.46057858901958,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.85780611765503,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.1082742619847721,
+        "mean_plan_ms": 25.554643650860363,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.73718757666678,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13153204259248483,
+        "mean_plan_ms": 25.563043269078033,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.169201492995406,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11611742443623653,
+        "mean_plan_ms": 25.84326292764252,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.679989373982487,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.11010555055388993,
+        "mean_plan_ms": 25.38993951483545,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.621138436857805,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.11199659001778574,
+        "mean_plan_ms": 28.380661252735845,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.62169294986858,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1173662761271908,
+        "mean_plan_ms": 25.672052919757196,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -37.11331297403439,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13763971067382844,
+        "mean_plan_ms": 26.47459280426399,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.59658311887783,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.1478349649894708,
+        "mean_plan_ms": 25.60913960915059,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -32.37652628304541,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.11182081667452327,
+        "mean_plan_ms": 25.84628169890493,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.83462518538428,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12151233009907413,
+        "mean_plan_ms": 25.674708381605644,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.668609512100783,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.1368006867331051,
+        "mean_plan_ms": 25.59222920616675,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.72672111352454,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.11382776660729377,
+        "mean_plan_ms": 25.60771307994232,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.84318811135825,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1360715546015088,
+        "mean_plan_ms": 25.832921454611306,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.760089789105564,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10795788821096197,
+        "mean_plan_ms": 25.69977425446268,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.23435925805658,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.13463265295798485,
+        "mean_plan_ms": 26.874873345756594,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.176106981744944,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1271355538511622,
+        "mean_plan_ms": 26.923402816811134,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.344529469395237,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.1392549827476016,
+        "mean_plan_ms": 25.635554835102276,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -10.889086200534093,
+        "steps": 16,
+        "success": true,
+        "final_distance": 0.13670659095239454,
+        "mean_plan_ms": 26.08587255963357,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.41372719624956,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.12114928908607313,
+        "mean_plan_ms": 26.419003570006918,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.844813121495026,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.13560199039776963,
+        "mean_plan_ms": 25.877953356351046,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.941475037247304,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14691853747711983,
+        "mean_plan_ms": 25.796257253007397,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.16320857063675,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.12781509551984077,
+        "mean_plan_ms": 27.4229385402231,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.91800865141815,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13269279307611903,
+        "mean_plan_ms": 25.676796316272682,
+        "refit": null,
+        "online_interactions": 445
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.51866020657327,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.1192227767466295,
+        "mean_plan_ms": 26.0015333769843,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.81650187995468,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.10743279423126614,
+        "mean_plan_ms": 25.920837309968192,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.89493639602666,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.09867969356813472,
+        "mean_plan_ms": 26.453110954857298,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.060070363634,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.12507929016331432,
+        "mean_plan_ms": 25.9109706212594,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.98765467817085,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.10742132048194941,
+        "mean_plan_ms": 25.988491965577968,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.25518519138683,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.11255673292056081,
+        "mean_plan_ms": 25.953885405518424,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.85791894907879,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.14261648341296,
+        "mean_plan_ms": 26.362610461476905,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.90443403246104,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.1306249032075025,
+        "mean_plan_ms": 27.569353452016568,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.68229916968354,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12718686552840497,
+        "mean_plan_ms": 26.266009802034553,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.114709076163656,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.13016943733224196,
+        "mean_plan_ms": 25.859314151323186,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.5691221707223,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.09655882622739687,
+        "mean_plan_ms": 26.09829942759296,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.60581199246213,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.12087452859779245,
+        "mean_plan_ms": 25.599659946296484,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -35.73596621213211,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.12279832720038512,
+        "mean_plan_ms": 25.61205887669248,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.92667752574102,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.14881380484915274,
+        "mean_plan_ms": 25.85647325962782,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.826444114535157,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.1158471587709974,
+        "mean_plan_ms": 25.583041587933188,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -32.274349646890194,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.1282755290457196,
+        "mean_plan_ms": 26.21599516043296,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.50846475133406,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.12456306649203892,
+        "mean_plan_ms": 27.13003604794326,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.565142162715386,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.09064551693202175,
+        "mean_plan_ms": 25.413502376371373,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -37.391786215531916,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.1371051994844577,
+        "mean_plan_ms": 25.96416828575833,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.75994524986639,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10710128230598023,
+        "mean_plan_ms": 25.53116030489596,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.836676092230157,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.12918748412432046,
+        "mean_plan_ms": 25.683055491147872,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.14735350264673,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.0913470138799742,
+        "mean_plan_ms": 28.990449670042533,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -19.97323683588337,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11197248606801417,
+        "mean_plan_ms": 25.46977981304129,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.40560621166532,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.09403578421609753,
+        "mean_plan_ms": 26.87649794970639,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -10.964743456751076,
+        "steps": 16,
+        "success": true,
+        "final_distance": 0.14656413287464987,
+        "mean_plan_ms": 25.508335937047377,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -29.355476851615645,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.12129291641659395,
+        "mean_plan_ms": 25.809076937058798,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -13.048481705664969,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.105306160450035,
+        "mean_plan_ms": 25.580492892509533,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.812253083227304,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.13312321094924356,
+        "mean_plan_ms": 25.782499776181318,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.328725527721208,
+        "steps": 22,
+        "success": true,
+        "final_distance": 0.12244964697986908,
+        "mean_plan_ms": 25.52678040228784,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.950405693197235,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.14545691189358004,
+        "mean_plan_ms": 25.40698148853456,
+        "refit": null,
+        "online_interactions": 409
+      },
+      {
+        "episode": 10000,
+        "seed": 50000,
+        "return": -53.21147039203206,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.1433703820798274,
+        "mean_plan_ms": 26.402029193316896,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10001,
+        "seed": 50001,
+        "return": -57.567510056915864,
+        "steps": 32,
+        "success": true,
+        "final_distance": 0.10886011734188278,
+        "mean_plan_ms": 26.030187334981747,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10002,
+        "seed": 50002,
+        "return": -19.848240644922686,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10121106284819137,
+        "mean_plan_ms": 25.81863495565596,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10003,
+        "seed": 50003,
+        "return": -39.081924088062884,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.1250854247320355,
+        "mean_plan_ms": 25.548666638011735,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10004,
+        "seed": 50004,
+        "return": -63.86578092726593,
+        "steps": 30,
+        "success": true,
+        "final_distance": 0.11338093152320536,
+        "mean_plan_ms": 25.46849448311453,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10005,
+        "seed": 50005,
+        "return": -34.27478436781338,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.14444004520345885,
+        "mean_plan_ms": 25.97250733220869,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10006,
+        "seed": 50006,
+        "return": -37.862913465179325,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09940463011632115,
+        "mean_plan_ms": 25.636495225346433,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10007,
+        "seed": 50007,
+        "return": -48.86592613095355,
+        "steps": 29,
+        "success": true,
+        "final_distance": 0.07814459848726511,
+        "mean_plan_ms": 26.647557444260293,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10008,
+        "seed": 50008,
+        "return": -33.22014448121188,
+        "steps": 25,
+        "success": true,
+        "final_distance": 0.1426322389725493,
+        "mean_plan_ms": 26.590551738627255,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10009,
+        "seed": 50009,
+        "return": -33.08104480526339,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.09631392576312335,
+        "mean_plan_ms": 25.895312544889748,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10010,
+        "seed": 50010,
+        "return": -21.323199432572135,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.13316786607418996,
+        "mean_plan_ms": 25.53543847032069,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10011,
+        "seed": 50011,
+        "return": -50.58108483480416,
+        "steps": 31,
+        "success": true,
+        "final_distance": 0.0980008687541367,
+        "mean_plan_ms": 25.677873749255895,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10012,
+        "seed": 50012,
+        "return": -34.7379295013,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.11986916234652226,
+        "mean_plan_ms": 25.993899088532018,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10013,
+        "seed": 50013,
+        "return": -36.75686971358781,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.10500099417109222,
+        "mean_plan_ms": 25.60162976778184,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10014,
+        "seed": 50014,
+        "return": -21.769834452243625,
+        "steps": 20,
+        "success": true,
+        "final_distance": 0.1376572205913583,
+        "mean_plan_ms": 25.945735536515713,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10015,
+        "seed": 50015,
+        "return": -31.59665767059396,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.14015786369605046,
+        "mean_plan_ms": 25.655928776056196,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10016,
+        "seed": 50016,
+        "return": -28.573757641374993,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.09960747248170117,
+        "mean_plan_ms": 26.212465313922923,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10017,
+        "seed": 50017,
+        "return": -13.660128423517765,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.12098409853069497,
+        "mean_plan_ms": 25.820245216083194,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10018,
+        "seed": 50018,
+        "return": -36.476831426540244,
+        "steps": 27,
+        "success": true,
+        "final_distance": 0.11849246951715209,
+        "mean_plan_ms": 25.414106479190565,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10019,
+        "seed": 50019,
+        "return": -36.532520026559595,
+        "steps": 26,
+        "success": true,
+        "final_distance": 0.0997053762191907,
+        "mean_plan_ms": 25.70177561406476,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10020,
+        "seed": 50020,
+        "return": -25.995339322742126,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.10634804380861508,
+        "mean_plan_ms": 25.81999994678578,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10021,
+        "seed": 50021,
+        "return": -33.28311386213935,
+        "steps": 24,
+        "success": true,
+        "final_distance": 0.1388926996908089,
+        "mean_plan_ms": 25.81218757162181,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10022,
+        "seed": 50022,
+        "return": -20.121217534845602,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.10194724176713549,
+        "mean_plan_ms": 25.77336490642102,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10023,
+        "seed": 50023,
+        "return": -18.36337707330813,
+        "steps": 19,
+        "success": true,
+        "final_distance": 0.14466365608197476,
+        "mean_plan_ms": 25.43432453010035,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10024,
+        "seed": 50024,
+        "return": -10.978295079045562,
+        "steps": 16,
+        "success": true,
+        "final_distance": 0.13919410872992943,
+        "mean_plan_ms": 26.574179632007144,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10025,
+        "seed": 50025,
+        "return": -28.796216321164895,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.11117732531260952,
+        "mean_plan_ms": 25.62945660041726,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10026,
+        "seed": 50026,
+        "return": -12.933698947205388,
+        "steps": 17,
+        "success": true,
+        "final_distance": 0.13642849757240175,
+        "mean_plan_ms": 26.327053899876773,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10027,
+        "seed": 50027,
+        "return": -28.757264643137397,
+        "steps": 23,
+        "success": true,
+        "final_distance": 0.10475196305893457,
+        "mean_plan_ms": 25.812152120203752,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10028,
+        "seed": 50028,
+        "return": -26.251380842927478,
+        "steps": 21,
+        "success": true,
+        "final_distance": 0.11337669209788252,
+        "mean_plan_ms": 25.944511960482313,
+        "refit": null,
+        "online_interactions": 433
+      },
+      {
+        "episode": 10029,
+        "seed": 50029,
+        "return": -14.929804938620025,
+        "steps": 18,
+        "success": true,
+        "final_distance": 0.13314218981933848,
+        "mean_plan_ms": 25.325081104205715,
+        "refit": null,
+        "online_interactions": 433
+      }
+    ]
+  },
+  "online_curves": {
+    "0": [
+      {
+        "episode": 0,
+        "interactions_so_far": 123,
+        "success": true,
+        "return": -25.783236433832514,
+        "steps": 23,
+        "refit_holdout_mse": 0.0003313882965529352,
+        "refit_seconds": 0.051889291033148766
+      },
+      {
+        "episode": 1,
+        "interactions_so_far": 155,
+        "success": true,
+        "return": -52.26516187132806,
+        "steps": 32,
+        "refit_holdout_mse": 0.00013360847647835353,
+        "refit_seconds": 0.05696879199240357
+      },
+      {
+        "episode": 2,
+        "interactions_so_far": 176,
+        "success": true,
+        "return": -18.87497907251284,
+        "steps": 21,
+        "refit_holdout_mse": 0.0002304252425895515,
+        "refit_seconds": 0.060602208017371595
+      },
+      {
+        "episode": 3,
+        "interactions_so_far": 197,
+        "success": true,
+        "return": -22.816188612882552,
+        "steps": 21,
+        "refit_holdout_mse": 0.0001961868651115556,
+        "refit_seconds": 0.06165558297652751
+      },
+      {
+        "episode": 4,
+        "interactions_so_far": 216,
+        "success": true,
+        "return": -19.79618394170142,
+        "steps": 19,
+        "refit_holdout_mse": 0.00021130851827279082,
+        "refit_seconds": 0.06387091602664441
+      },
+      {
+        "episode": 5,
+        "interactions_so_far": 232,
+        "success": true,
+        "return": -12.3763182120575,
+        "steps": 16,
+        "refit_holdout_mse": 0.00016097148010574744,
+        "refit_seconds": 0.06725270801689476
+      },
+      {
+        "episode": 6,
+        "interactions_so_far": 256,
+        "success": true,
+        "return": -29.74814901996231,
+        "steps": 24,
+        "refit_holdout_mse": 0.00023853620152298409,
+        "refit_seconds": 0.06934895901940763
+      },
+      {
+        "episode": 7,
+        "interactions_so_far": 276,
+        "success": true,
+        "return": -21.38027236455944,
+        "steps": 20,
+        "refit_holdout_mse": 0.000212030166301784,
+        "refit_seconds": 0.07183779100887477
+      },
+      {
+        "episode": 8,
+        "interactions_so_far": 297,
+        "success": true,
+        "return": -21.423120845216292,
+        "steps": 21,
+        "refit_holdout_mse": 0.0002366149472061276,
+        "refit_seconds": 0.1124467080226168
+      },
+      {
+        "episode": 9,
+        "interactions_so_far": 322,
+        "success": true,
+        "return": -37.10219457799153,
+        "steps": 25,
+        "refit_holdout_mse": 0.00016779010564513282,
+        "refit_seconds": 0.11537904210854322
+      },
+      {
+        "episode": 10,
+        "interactions_so_far": 339,
+        "success": true,
+        "return": -13.287378182548197,
+        "steps": 17,
+        "refit_holdout_mse": 0.00020722145559611268,
+        "refit_seconds": 0.1202372080879286
+      },
+      {
+        "episode": 11,
+        "interactions_so_far": 366,
+        "success": true,
+        "return": -35.16036602688869,
+        "steps": 27,
+        "refit_holdout_mse": 0.00019122185135732843,
+        "refit_seconds": 0.12117958290036768
+      },
+      {
+        "episode": 12,
+        "interactions_so_far": 389,
+        "success": true,
+        "return": -29.439168717002232,
+        "steps": 23,
+        "refit_holdout_mse": 0.0001837255688276711,
+        "refit_seconds": 0.12476549996063113
+      },
+      {
+        "episode": 13,
+        "interactions_so_far": 410,
+        "success": true,
+        "return": -21.017867707880324,
+        "steps": 21,
+        "refit_holdout_mse": 0.00017280633901286217,
+        "refit_seconds": 0.13040308293420821
+      },
+      {
+        "episode": 14,
+        "interactions_so_far": 445,
+        "success": true,
+        "return": -63.37029345685973,
+        "steps": 35,
+        "refit_holdout_mse": 0.0001997159132809161,
+        "refit_seconds": 0.14182950009126216
+      }
+    ],
+    "1": [
+      {
+        "episode": 0,
+        "interactions_so_far": 126,
+        "success": true,
+        "return": -37.7590067181365,
+        "steps": 26,
+        "refit_holdout_mse": 0.0001957398548351678,
+        "refit_seconds": 0.05301674990914762
+      },
+      {
+        "episode": 1,
+        "interactions_so_far": 146,
+        "success": true,
+        "return": -20.487011379425287,
+        "steps": 20,
+        "refit_holdout_mse": 0.0002925001638044967,
+        "refit_seconds": 0.05651387490797788
+      },
+      {
+        "episode": 2,
+        "interactions_so_far": 163,
+        "success": true,
+        "return": -13.369772939626731,
+        "steps": 17,
+        "refit_holdout_mse": 0.0002278469458407521,
+        "refit_seconds": 0.05828933301381767
+      },
+      {
+        "episode": 3,
+        "interactions_so_far": 183,
+        "success": true,
+        "return": -18.85976119297014,
+        "steps": 20,
+        "refit_holdout_mse": 0.0002383879338881392,
+        "refit_seconds": 0.06432187499012798
+      },
+      {
+        "episode": 4,
+        "interactions_so_far": 208,
+        "success": true,
+        "return": -31.40218815211196,
+        "steps": 25,
+        "refit_holdout_mse": 0.0002420445684913286,
+        "refit_seconds": 0.06884979200549424
+      },
+      {
+        "episode": 5,
+        "interactions_so_far": 226,
+        "success": true,
+        "return": -13.713459729437329,
+        "steps": 18,
+        "refit_holdout_mse": 0.00028466614698992315,
+        "refit_seconds": 0.06714708299841732
+      },
+      {
+        "episode": 6,
+        "interactions_so_far": 240,
+        "success": true,
+        "return": -9.022790904924785,
+        "steps": 14,
+        "refit_holdout_mse": 0.0004154886078105272,
+        "refit_seconds": 0.06922804203350097
+      },
+      {
+        "episode": 7,
+        "interactions_so_far": 262,
+        "success": true,
+        "return": -24.01223748166244,
+        "steps": 22,
+        "refit_holdout_mse": 0.00020823143078756897,
+        "refit_seconds": 0.07121050008572638
+      },
+      {
+        "episode": 8,
+        "interactions_so_far": 284,
+        "success": true,
+        "return": -21.84623631710076,
+        "steps": 22,
+        "refit_holdout_mse": 0.0001963095403133516,
+        "refit_seconds": 0.07293066696729511
+      },
+      {
+        "episode": 9,
+        "interactions_so_far": 299,
+        "success": true,
+        "return": -11.20321400905591,
+        "steps": 15,
+        "refit_holdout_mse": 0.0001864057124965894,
+        "refit_seconds": 0.11429787508677691
+      },
+      {
+        "episode": 10,
+        "interactions_so_far": 319,
+        "success": true,
+        "return": -20.652583618289697,
+        "steps": 20,
+        "refit_holdout_mse": 0.00018212310546055052,
+        "refit_seconds": 0.11608812492340803
+      },
+      {
+        "episode": 11,
+        "interactions_so_far": 342,
+        "success": true,
+        "return": -27.88140501430508,
+        "steps": 23,
+        "refit_holdout_mse": 0.000267008666406137,
+        "refit_seconds": 0.1215431250166148
+      },
+      {
+        "episode": 12,
+        "interactions_so_far": 361,
+        "success": true,
+        "return": -17.521568634853114,
+        "steps": 19,
+        "refit_holdout_mse": 0.00023049586403892653,
+        "refit_seconds": 0.12144399993121624
+      },
+      {
+        "episode": 13,
+        "interactions_so_far": 381,
+        "success": true,
+        "return": -21.15904578376687,
+        "steps": 20,
+        "refit_holdout_mse": 0.00018487662789096293,
+        "refit_seconds": 0.12369687494356185
+      },
+      {
+        "episode": 14,
+        "interactions_so_far": 409,
+        "success": true,
+        "return": -49.17097746104887,
+        "steps": 28,
+        "refit_holdout_mse": 0.00020217778280733206,
+        "refit_seconds": 0.12825829209759831
+      }
+    ],
+    "2": [
+      {
+        "episode": 0,
+        "interactions_so_far": 120,
+        "success": true,
+        "return": -23.6187877639845,
+        "steps": 20,
+        "refit_holdout_mse": 0.00014028773477590254,
+        "refit_seconds": 0.053019416984170675
+      },
+      {
+        "episode": 1,
+        "interactions_so_far": 140,
+        "success": true,
+        "return": -17.302912678163533,
+        "steps": 20,
+        "refit_holdout_mse": 0.00019942358133986416,
+        "refit_seconds": 0.057590333046391606
+      },
+      {
+        "episode": 2,
+        "interactions_so_far": 161,
+        "success": true,
+        "return": -25.042285026824644,
+        "steps": 21,
+        "refit_holdout_mse": 0.00018122581033838328,
+        "refit_seconds": 0.05826583399903029
+      },
+      {
+        "episode": 3,
+        "interactions_so_far": 183,
+        "success": true,
+        "return": -25.162721720819487,
+        "steps": 22,
+        "refit_holdout_mse": 0.00024436139383178523,
+        "refit_seconds": 0.061343417037278414
+      },
+      {
+        "episode": 4,
+        "interactions_so_far": 212,
+        "success": true,
+        "return": -49.61739055524185,
+        "steps": 29,
+        "refit_holdout_mse": 0.0002450148869140295,
+        "refit_seconds": 0.06469679204747081
+      },
+      {
+        "episode": 5,
+        "interactions_so_far": 236,
+        "success": true,
+        "return": -32.31520697651115,
+        "steps": 24,
+        "refit_holdout_mse": 0.00017034611631340946,
+        "refit_seconds": 0.07004120794590563
+      },
+      {
+        "episode": 6,
+        "interactions_so_far": 260,
+        "success": true,
+        "return": -29.94683498147064,
+        "steps": 24,
+        "refit_holdout_mse": 0.0002546568195443418,
+        "refit_seconds": 0.07259512494783849
+      },
+      {
+        "episode": 7,
+        "interactions_so_far": 288,
+        "success": true,
+        "return": -50.233838007316585,
+        "steps": 28,
+        "refit_holdout_mse": 0.00025070652708770633,
+        "refit_seconds": 0.11818604206200689
+      },
+      {
+        "episode": 8,
+        "interactions_so_far": 304,
+        "success": true,
+        "return": -11.587892495041768,
+        "steps": 16,
+        "refit_holdout_mse": 0.00015450884725224732,
+        "refit_seconds": 0.1156433749711141
+      },
+      {
+        "episode": 9,
+        "interactions_so_far": 320,
+        "success": true,
+        "return": -11.286408463615343,
+        "steps": 16,
+        "refit_holdout_mse": 0.0002698606860766773,
+        "refit_seconds": 0.11660079099237919
+      },
+      {
+        "episode": 10,
+        "interactions_so_far": 342,
+        "success": true,
+        "return": -24.166892387703133,
+        "steps": 22,
+        "refit_holdout_mse": 0.0001693634614952669,
+        "refit_seconds": 0.12059054197743535
+      },
+      {
+        "episode": 11,
+        "interactions_so_far": 371,
+        "success": true,
+        "return": -42.85111494922017,
+        "steps": 29,
+        "refit_holdout_mse": 0.0001982664926242367,
+        "refit_seconds": 0.128899332950823
+      },
+      {
+        "episode": 12,
+        "interactions_so_far": 387,
+        "success": true,
+        "return": -11.117744983547771,
+        "steps": 16,
+        "refit_holdout_mse": 0.00022367672745196476,
+        "refit_seconds": 0.125391292036511
+      },
+      {
+        "episode": 13,
+        "interactions_so_far": 413,
+        "success": true,
+        "return": -35.082765042959714,
+        "steps": 26,
+        "refit_holdout_mse": 0.0002662000267539036,
+        "refit_seconds": 0.12949829106219113
+      },
+      {
+        "episode": 14,
+        "interactions_so_far": 433,
+        "success": true,
+        "return": -20.272434459403254,
+        "steps": 20,
+        "refit_holdout_mse": 0.00018064616449418584,
+        "refit_seconds": 0.13367745897267014
+      }
+    ]
+  },
+  "pd_tuning": {
+    "grid": {
+      "1.0,0.5": {
+        "success_rate": 1.0,
+        "return_mean": -20.404898796031066,
+        "return_std": 9.546742154471177,
+        "steps_mean": 22.25,
+        "decision_ms_mean": 0.003267192369796753,
+        "n": 20
+      },
+      "1.0,1.0": {
+        "success_rate": 1.0,
+        "return_mean": -23.61430439787779,
+        "return_std": 10.097919113922853,
+        "steps_mean": 28.8,
+        "decision_ms_mean": 0.003255183370874053,
+        "n": 20
+      },
+      "1.0,2.0": {
+        "success_rate": 1.0,
+        "return_mean": -35.43948279466839,
+        "return_std": 14.490399644668786,
+        "steps_mean": 53.9,
+        "decision_ms_mean": 0.003233583965521395,
+        "n": 20
+      },
+      "2.0,0.5": {
+        "success_rate": 1.0,
+        "return_mean": -19.646471661452534,
+        "return_std": 11.579059318315366,
+        "steps_mean": 22.4,
+        "decision_ms_mean": 0.003187817503097637,
+        "n": 20
+      },
+      "2.0,1.0": {
+        "success_rate": 1.0,
+        "return_mean": -18.771625296870884,
+        "return_std": 9.979994039962047,
+        "steps_mean": 19.6,
+        "decision_ms_mean": 0.003326876267668815,
+        "n": 20
+      },
+      "2.0,2.0": {
+        "success_rate": 1.0,
+        "return_mean": -21.69910053948947,
+        "return_std": 10.439383396849935,
+        "steps_mean": 26.8,
+        "decision_ms_mean": 0.0033108793818946427,
+        "n": 20
+      },
+      "4.0,0.5": {
+        "success_rate": 1.0,
+        "return_mean": -20.913116732004877,
+        "return_std": 11.789357527313227,
+        "steps_mean": 26.2,
+        "decision_ms_mean": 0.0032091358739391395,
+        "n": 20
+      },
+      "4.0,1.0": {
+        "success_rate": 1.0,
+        "return_mean": -18.95928621958557,
+        "return_std": 10.96615265855926,
+        "steps_mean": 21.05,
+        "decision_ms_mean": 0.0033215802805519083,
+        "n": 20
+      },
+      "4.0,2.0": {
+        "success_rate": 1.0,
+        "return_mean": -18.487086221783198,
+        "return_std": 10.040421978298092,
+        "steps_mean": 19.15,
+        "decision_ms_mean": 0.003260210187784299,
+        "n": 20
+      }
+    },
+    "chosen": {
+      "kp": 4.0,
+      "kd": 2.0
+    }
+  },
+  "summary": {
+    "random": {
+      "success_rate": 0.03333333333333333,
+      "return_mean": -209.11290069723145,
+      "return_std": 71.80062103007639,
+      "steps_mean": 99.3,
+      "decision_ms_mean": 0.0015293187702483328,
+      "n": 30
+    },
+    "pd": {
+      "success_rate": 1.0,
+      "return_mean": -31.101113936625463,
+      "return_std": 12.774490619706546,
+      "steps_mean": 23.833333333333332,
+      "decision_ms_mean": 0.003202225701873248,
+      "n": 30
+    },
+    "cem_true_dynamics": {
+      "success_rate": 1.0,
+      "return_mean": -31.80612236472202,
+      "return_std": 13.090876468406435,
+      "steps_mean": 24.166666666666668,
+      "decision_ms_mean": 2.218387655918693,
+      "n": 90
+    },
+    "cem_learned": {
+      "success_rate": 1.0,
+      "return_mean": -31.77165623848503,
+      "return_std": 13.079237909680007,
+      "steps_mean": 24.11111111111111,
+      "decision_ms_mean": 26.01790928000569,
+      "n": 90
+    },
+    "cem_learned_m1": {
+      "success_rate": 1.0,
+      "return_mean": -31.655304861221964,
+      "return_std": 13.071776909001626,
+      "steps_mean": 23.566666666666666,
+      "decision_ms_mean": 23.703989436845212,
+      "n": 90
+    },
+    "cem_online": {
+      "success_rate": 1.0,
+      "return_mean": -31.861421882443437,
+      "return_std": 13.127703475503811,
+      "steps_mean": 24.177777777777777,
+      "decision_ms_mean": 25.986840031457078,
+      "n": 90
+    }
+  },
+  "wall_seconds": 208.6711549758911
+}

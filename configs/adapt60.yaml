@@ -1,0 +1,90 @@
+# Adaptation-speed / forgetting sweep (60 deg rotation). Identical to configs/rotation60.yaml plus the
+# `adapt_sweep` block; scripts/run_adapt_sweep.py overrides only adapt.min_new and adapt.replay_ratio.
+seed: 0
+env:
+  arena: 2.0
+  max_steps: 100
+  goal_radius: 0.15
+  action_cost: 0.01
+  dynamics:
+    gain: 1.0
+    drag: 0.5
+    dt: 0.1
+    process_noise: 0.02
+model:
+  n_members: 5
+  hidden: 128
+  layers: 2
+  lr: 0.001
+  epochs: 60
+  batch_size: 256
+  holdout_frac: 0.1
+  wall_clip_predictions: true
+  train_exclude_walls: true
+  arena: 2.0
+planner:
+  horizon: 15
+  n_candidates: 256
+  n_elites: 25
+  iterations: 4
+  init_std: 0.6
+  action_cost: 0.01
+detector:
+  drift: 0.5
+  threshold: 10.0
+adapt:
+  min_new: 100
+  every: 100
+  max_new: 500
+  epochs: 40
+  lr: 0.001
+data:
+  pretrain_episodes: 30
+experiment:
+  agent_seeds:
+  - 0
+  - 1
+  - 2
+  eval_seed_base: 50000
+  n_eval_episodes: 30
+  tune_seed_base: 60000
+  n_tune_episodes: 20
+  online_episodes: 15
+  online_initial_random: 1
+shift:
+  rotation_deg: 60.0
+shift_experiment:
+  calib_episodes: 5
+  episodes: 30
+  shift_episode: 8
+  seeds:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  pd_gains:
+  - 4.0
+  - 2.0
+  pd_retune_oracle: true
+adapt_sweep:
+  tune_seeds:
+  - 100
+  - 101
+  - 102
+  eval_seeds:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  min_new:
+  - 10
+  - 25
+  - 50
+  - 100
+  replay_ratio:
+  - 0.0
+  - 0.25
+  - 0.5
+  return_tolerance: 2.0

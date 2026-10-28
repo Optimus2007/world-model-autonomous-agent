@@ -1,0 +1,26 @@
+seed 1 none: success orig/changed/reverted 1.00/0.00/1.00
+seed 0 none: success orig/changed/reverted 1.00/0.00/1.00
+seed 4 none: success orig/changed/reverted 1.00/0.00/1.00
+seed 2 none: success orig/changed/reverted 1.00/0.00/1.00
+seed 3 none: success orig/changed/reverted 1.00/0.00/1.00
+seed 3 adapt_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 0 adapt_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 1 adapt_m50_r0: success orig/changed/reverted 1.00/1.00/0.90
+seed 2 adapt_m50_r0: success orig/changed/reverted 1.00/1.00/0.90
+seed 4 adapt_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 3 adapt_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 0 adapt_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 1 adapt_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 4 adapt_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 2 adapt_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 3 oracle_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 0 oracle_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 1 oracle_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 2 oracle_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 4 oracle_m50_r0: success orig/changed/reverted 1.00/1.00/1.00
+seed 3 oracle_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 0 oracle_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 1 oracle_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 4 oracle_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+seed 2 oracle_m50_r0.25: success orig/changed/reverted 1.00/1.00/1.00
+total 290s

@@ -1,0 +1,28 @@
+# Python / tooling
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets and local environment configuration (never commit)
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# Large or regenerable experiment artefacts (see README, "What is in results/ and what is not")
+results/**/*.npz
+results/**/checkpoints/
+*.pt
+results/m1_repro/
+results/m1_repro.log
+results/**/pilot_config.yaml

@@ -1,0 +1,104 @@
+{
+  "config": {
+    "seed": 0,
+    "env": {
+      "arena": 2.0,
+      "max_steps": 100,
+      "goal_radius": 0.15,
+      "action_cost": 0.01,
+      "dynamics": {
+        "gain": 1.0,
+        "drag": 0.5,
+        "dt": 0.1
+      }
+    },
+    "model": {
+      "n_members": 5,
+      "hidden": 128,
+      "layers": 2,
+      "lr": 0.001,
+      "weight_decay": 1e-05,
+      "batch_size": 256,
+      "epochs": 60,
+      "holdout_frac": 0.1,
+      "bootstrap": true
+    },
+    "data": {
+      "train_episodes": 100,
+      "test_episodes": 20
+    },
+    "shift": {
+      "drag": 1.5,
+      "gain": 0.6
+    }
+  },
+  "fit": {
+    "n_train": 8964,
+    "n_holdout": 996,
+    "train_mse": 0.0014761405664482994,
+    "holdout_mse": 0.0013590774694462464,
+    "fit_seconds": 6.551090833032504
+  },
+  "test_one_step": {
+    "n": 2000,
+    "mse_model": 0.001402135571294036,
+    "mse_zero_delta": 0.0035831359296488474,
+    "mse_const_velocity": 0.0028322278319181386,
+    "mean_disagreement": 4.1520969057972825e-05,
+    "spearman_disagreement_vs_error": 0.46107694626923657,
+    "top10_overlap": 0.645
+  },
+  "test_multi_step": {
+    "h1": {
+      "mse_mean": 0.0002922951677352242,
+      "mse_median": 5.3630123746681176e-05,
+      "n": 60
+    },
+    "h5": {
+      "mse_mean": 0.0029025649172790403,
+      "mse_median": 0.0010113462716902265,
+      "n": 60
+    },
+    "h10": {
+      "mse_mean": 0.0061345330865583015,
+      "mse_median": 0.003590450129723273,
+      "n": 60
+    },
+    "h20": {
+      "mse_mean": 0.012467483277931686,
+      "mse_median": 0.011006492714977216,
+      "n": 60
+    }
+  },
+  "shifted_one_step": {
+    "n": 2000,
+    "mse_model": 0.0005263989056169109,
+    "mse_zero_delta": 0.00045947146382589596,
+    "mse_const_velocity": 0.00037715117137475493,
+    "mean_disagreement": 1.417070478580242e-05,
+    "spearman_disagreement_vs_error": 0.29157998039499505,
+    "top10_overlap": 0.22
+  },
+  "shifted_multi_step": {
+    "h1": {
+      "mse_mean": 0.0004946512394585427,
+      "mse_median": 0.0003948242687993785,
+      "n": 60
+    },
+    "h5": {
+      "mse_mean": 0.010765560857315164,
+      "mse_median": 0.006969550644827311,
+      "n": 60
+    },
+    "h10": {
+      "mse_mean": 0.03152873920598087,
+      "mse_median": 0.022024900095723283,
+      "n": 60
+    },
+    "h20": {
+      "mse_mean": 0.10177983045710816,
+      "mse_median": 0.0637403768060027,
+      "n": 60
+    }
+  }
+}

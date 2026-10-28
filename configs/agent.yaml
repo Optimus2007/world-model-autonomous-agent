@@ -1,0 +1,67 @@
+# Config for the closed-loop agent experiments (Steps 2-3).
+# configs/default.yaml is kept unchanged so M1 stays reproducible.
+seed: 0
+
+env:
+  arena: 2.0
+  max_steps: 100
+  goal_radius: 0.15
+  action_cost: 0.01
+  dynamics:
+    gain: 1.0
+    drag: 0.5
+    dt: 0.1
+    process_noise: 0.02   # velocity noise; makes residuals non-degenerate for change detection
+
+model:
+  n_members: 5
+  hidden: 128
+  layers: 2
+  lr: 0.001
+  epochs: 60
+  batch_size: 256
+  holdout_frac: 0.1
+  wall_clip_predictions: true   # Step 1 result: exact simulator wall rule
+  train_exclude_walls: true
+  arena: 2.0
+
+planner:
+  horizon: 15
+  n_candidates: 256
+  n_elites: 25
+  iterations: 4
+  init_std: 0.6
+  action_cost: 0.01
+
+detector:
+  drift: 0.5
+  threshold: 10.0
+
+adapt:
+  min_new: 100
+  every: 100
+  max_new: 500
+  epochs: 40
+  lr: 0.001
+
+data:
+  pretrain_episodes: 30     # random-policy episodes before the agent starts
+
+experiment:
+  agent_seeds: [0, 1, 2]
+  eval_seed_base: 50000      # evaluation episode reset seeds (identical for every condition)
+  n_eval_episodes: 30
+  tune_seed_base: 60000      # PD gain tuning episodes (disjoint from eval)
+  n_tune_episodes: 20
+  online_episodes: 15        # Step 2 learning curve: plan, store, refit each episode
+  online_initial_random: 1
+
+# Step 3: dynamics change during an online run
+shift:
+  drag: 1.5
+  gain: 0.6
+shift_experiment:
+  calib_episodes: 5          # planner episodes used only to calibrate detectors (never fit)
+  episodes: 30               # online episodes per run
+  shift_episode: 8           # dynamics change at the first step of this episode
+  seeds: [0, 1, 2, 3, 4]

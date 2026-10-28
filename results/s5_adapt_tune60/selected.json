@@ -1,0 +1,191 @@
+{
+ "selected": {
+  "min_new": 50,
+  "replay_ratio": 0.25,
+  "success": 1.0,
+  "return": -30.403452291253753,
+  "old_h1": 0.0006769803608218331,
+  "new_h1": 0.0005574323528296517,
+  "first_post_success": 1.0
+ },
+ "rule": "(fixed before any sweep result was seen):\n  1. highest mean post-change success rate over tuning seeds;\n  2. among those, configurations whose mean post-change return is within `return_tolerance` of the best;\n  3. among those, lowest mean held-out one-step error on the ORIGINAL dynamics (forgetting);\n  4. remaining ties: smaller min_new, then smaller replay ratio.",
+ "table": {
+  "rows": [
+   {
+    "min_new": 10,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -28.715033845973114,
+    "old_h1": 0.001593134496839588,
+    "new_h1": 0.00023124872858447246,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 10,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -29.24164681410497,
+    "old_h1": 0.0008081885272474121,
+    "new_h1": 0.0006698630709616062,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 10,
+    "replay_ratio": 0.5,
+    "success": 0.9848484848484849,
+    "return": -30.793159009225786,
+    "old_h1": 0.0006206973996883653,
+    "new_h1": 0.0009387357455244824,
+    "first_post_success": 0.6666666666666666
+   },
+   {
+    "min_new": 25,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -29.1115839551055,
+    "old_h1": 0.0016610839546574395,
+    "new_h1": 0.00023035048386722473,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 25,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -30.00838474877158,
+    "old_h1": 0.0007493947952784325,
+    "new_h1": 0.0007384795830353081,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 25,
+    "replay_ratio": 0.5,
+    "success": 1.0,
+    "return": -32.328332820343505,
+    "old_h1": 0.0005509104868836926,
+    "new_h1": 0.0009592915817243134,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 50,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -29.75492221296098,
+    "old_h1": 0.0015918691661627625,
+    "new_h1": 0.00022268412539693306,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 50,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -30.403452291253753,
+    "old_h1": 0.0006769803608218331,
+    "new_h1": 0.0005574323528296517,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 50,
+    "replay_ratio": 0.5,
+    "success": 1.0,
+    "return": -31.58858341980749,
+    "old_h1": 0.0004034303568450053,
+    "new_h1": 0.0009300586127080528,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 100,
+    "replay_ratio": 0.0,
+    "success": 0.9545454545454546,
+    "return": -31.185587294452976,
+    "old_h1": 0.001576291002591014,
+    "new_h1": 0.00023017425774092854,
+    "first_post_success": 0.0
+   },
+   {
+    "min_new": 100,
+    "replay_ratio": 0.25,
+    "success": 0.9545454545454546,
+    "return": -31.762956808446727,
+    "old_h1": 0.0006698248210686844,
+    "new_h1": 0.0005727190434007155,
+    "first_post_success": 0.0
+   },
+   {
+    "min_new": 100,
+    "replay_ratio": 0.5,
+    "success": 0.9545454545454546,
+    "return": -32.84159341196332,
+    "old_h1": 0.0004236635303246196,
+    "new_h1": 0.0009268568953051788,
+    "first_post_success": 0.0
+   }
+  ],
+  "candidates": [
+   {
+    "min_new": 10,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -28.715033845973114,
+    "old_h1": 0.001593134496839588,
+    "new_h1": 0.00023124872858447246,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 10,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -29.24164681410497,
+    "old_h1": 0.0008081885272474121,
+    "new_h1": 0.0006698630709616062,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 25,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -29.1115839551055,
+    "old_h1": 0.0016610839546574395,
+    "new_h1": 0.00023035048386722473,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 25,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -30.00838474877158,
+    "old_h1": 0.0007493947952784325,
+    "new_h1": 0.0007384795830353081,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 50,
+    "replay_ratio": 0.0,
+    "success": 1.0,
+    "return": -29.75492221296098,
+    "old_h1": 0.0015918691661627625,
+    "new_h1": 0.00022268412539693306,
+    "first_post_success": 1.0
+   },
+   {
+    "min_new": 50,
+    "replay_ratio": 0.25,
+    "success": 1.0,
+    "return": -30.403452291253753,
+    "old_h1": 0.0006769803608218331,
+    "new_h1": 0.0005574323528296517,
+    "first_post_success": 1.0
+   }
+  ],
+  "selected": {
+   "min_new": 50,
+   "replay_ratio": 0.25,
+   "success": 1.0,
+   "return": -30.403452291253753,
+   "old_h1": 0.0006769803608218331,
+   "new_h1": 0.0005574323528296517,
+   "first_post_success": 1.0
+  },
+  "best_success": 1.0,
+  "best_return": -28.715033845973114
+ }
+}

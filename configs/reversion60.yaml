@@ -1,0 +1,91 @@
+# Dynamics reversion: rotation 0 deg (episodes 0-7) -> 60 deg (8-19) -> 0 deg (20-29).
+# Same env, reward, model, planner, detector and calibration as configs/rotation60.yaml. Adaptation
+# settings come from the s5 selection on tuning seeds 100-102 (min_new 50; replay 0.25 or 0); nothing
+# is tuned on these evaluation seeds. 'oracle_*' conditions are told the change episodes (not deployable).
+seed: 0
+env:
+  arena: 2.0
+  max_steps: 100
+  goal_radius: 0.15
+  action_cost: 0.01
+  dynamics:
+    gain: 1.0
+    drag: 0.5
+    dt: 0.1
+    process_noise: 0.02
+model:
+  n_members: 5
+  hidden: 128
+  layers: 2
+  lr: 0.001
+  epochs: 60
+  batch_size: 256
+  holdout_frac: 0.1
+  wall_clip_predictions: true
+  train_exclude_walls: true
+  arena: 2.0
+planner:
+  horizon: 15
+  n_candidates: 256
+  n_elites: 25
+  iterations: 4
+  init_std: 0.6
+  action_cost: 0.01
+detector:
+  drift: 0.5
+  threshold: 10.0
+adapt:
+  min_new: 100
+  every: 100
+  max_new: 500
+  epochs: 40
+  lr: 0.001
+data:
+  pretrain_episodes: 30
+experiment:
+  agent_seeds:
+  - 0
+  - 1
+  - 2
+  eval_seed_base: 50000
+  n_eval_episodes: 30
+  tune_seed_base: 60000
+  n_tune_episodes: 20
+  online_episodes: 15
+  online_initial_random: 1
+shift:
+  rotation_deg: 60.0
+shift_experiment:
+  calib_episodes: 5
+  episodes: 30
+  shift_episode: 8
+  seeds:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  revert_episode: 20
+  revert:
+    rotation_deg: 0.0
+reversion:
+  record_condition: adapt_m50_r0.25
+  conditions:
+  - name: none
+    mode: none
+  - name: adapt_m50_r0
+    mode: residual
+    min_new: 50
+    replay_ratio: 0.0
+  - name: adapt_m50_r0.25
+    mode: residual
+    min_new: 50
+    replay_ratio: 0.25
+  - name: oracle_m50_r0
+    mode: oracle
+    min_new: 50
+    replay_ratio: 0.0
+  - name: oracle_m50_r0.25
+    mode: oracle
+    min_new: 50
+    replay_ratio: 0.25

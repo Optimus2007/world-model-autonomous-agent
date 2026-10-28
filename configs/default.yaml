@@ -1,0 +1,29 @@
+seed: 0
+
+env:
+  arena: 2.0
+  max_steps: 100
+  goal_radius: 0.15
+  action_cost: 0.01
+  dynamics:
+    gain: 1.0
+    drag: 0.5
+    dt: 0.1
+
+model:
+  n_members: 5
+  hidden: 128
+  layers: 2
+  lr: 0.001
+  epochs: 60
+  batch_size: 256
+  holdout_frac: 0.1
+
+data:
+  train_episodes: 100     # random-policy episodes for the initial model
+  test_episodes: 20       # held-out episodes (different seeds)
+
+# Dynamics used for the shifted test set (week-3 adaptation experiments).
+shift:
+  drag: 1.5
+  gain: 0.6

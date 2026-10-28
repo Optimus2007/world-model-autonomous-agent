@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autonomous-agent"
+version = "0.1.0"
+description = "World-model-guided autonomous learning agent (2-D point-mass, ensemble dynamics, uncertainty-aware planning)"
+requires-python = ">=3.10"
+dependencies = ["numpy", "torch", "matplotlib", "pyyaml"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

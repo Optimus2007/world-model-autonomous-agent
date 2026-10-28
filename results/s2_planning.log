@@ -1,0 +1,55 @@
+PD tuned on 20 episodes: kp=4.0 kd=2.0
+agent seed 0 done (70s); pretrain fit {'n_train': 2279, 'n_holdout': 253, 'train_mse': 0.00020460521119638098, 'holdout_mse': 0.0002923801097488313}
+agent seed 1 done (139s); pretrain fit {'n_train': 2363, 'n_holdout': 262, 'train_mse': 0.0001987069568203346, 'holdout_mse': 0.00018218755083207027}
+agent seed 2 done (209s); pretrain fit {'n_train': 2331, 'n_holdout': 259, 'train_mse': 0.0002832561384742535, 'holdout_mse': 0.00019004606186228765}
+{
+ "random": {
+  "success_rate": 0.03333333333333333,
+  "return_mean": -209.11290069723145,
+  "return_std": 71.80062103007639,
+  "steps_mean": 99.3,
+  "decision_ms_mean": 0.0015293187702483328,
+  "n": 30
+ },
+ "pd": {
+  "success_rate": 1.0,
+  "return_mean": -31.101113936625463,
+  "return_std": 12.774490619706546,
+  "steps_mean": 23.833333333333332,
+  "decision_ms_mean": 0.003202225701873248,
+  "n": 30
+ },
+ "cem_true_dynamics": {
+  "success_rate": 1.0,
+  "return_mean": -31.80612236472202,
+  "return_std": 13.090876468406435,
+  "steps_mean": 24.166666666666668,
+  "decision_ms_mean": 2.218387655918693,
+  "n": 90
+ },
+ "cem_learned": {
+  "success_rate": 1.0,
+  "return_mean": -31.77165623848503,
+  "return_std": 13.079237909680007,
+  "steps_mean": 24.11111111111111,
+  "decision_ms_mean": 26.01790928000569,
+  "n": 90
+ },
+ "cem_learned_m1": {
+  "success_rate": 1.0,
+  "return_mean": -31.655304861221964,
+  "return_std": 13.071776909001626,
+  "steps_mean": 23.566666666666666,
+  "decision_ms_mean": 23.703989436845212,
+  "n": 90
+ },
+ "cem_online": {
+  "success_rate": 1.0,
+  "return_mean": -31.861421882443437,
+  "return_std": 13.127703475503811,
+  "steps_mean": 24.177777777777777,
+  "decision_ms_mean": 25.986840031457078,
+  "n": 90
+ }
+}
+total 209s
