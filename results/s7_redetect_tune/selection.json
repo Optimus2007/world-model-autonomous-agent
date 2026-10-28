@@ -1,0 +1,45 @@
+{
+ "rule": "fewest false restarts (+1 allowed), then highest second_change return, then larger drift/threshold",
+ "grid": [
+  {
+   "redetect_drift": 1.0,
+   "redetect_threshold": 10.0,
+   "false_restarts": 9,
+   "second_change_return": -32.94743224609277
+  },
+  {
+   "redetect_drift": 1.0,
+   "redetect_threshold": 20.0,
+   "false_restarts": 6,
+   "second_change_return": -31.855564001709116
+  },
+  {
+   "redetect_drift": 1.5,
+   "redetect_threshold": 10.0,
+   "false_restarts": 1,
+   "second_change_return": -31.610159087686394
+  },
+  {
+   "redetect_drift": 1.5,
+   "redetect_threshold": 20.0,
+   "false_restarts": 0,
+   "second_change_return": -32.08481357477148
+  },
+  {
+   "redetect_drift": 2.0,
+   "redetect_threshold": 10.0,
+   "false_restarts": 0,
+   "second_change_return": -32.13160541610543
+  },
+  {
+   "redetect_drift": 2.0,
+   "redetect_threshold": 20.0,
+   "false_restarts": 0,
+   "second_change_return": -33.887666793793706
+  }
+ ],
+ "selected": {
+  "redetect_drift": 1.5,
+  "redetect_threshold": 10.0
+ }
+}

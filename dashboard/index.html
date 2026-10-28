@@ -91,6 +91,8 @@ table.agg th { color: var(--ink-2); font-weight: 600; }
     <option value="s5_adapt_eval60">s5_adapt_eval60: adaptation speed / replay, 60°</option>
     <option value="s5_adapt_eval90">s5_adapt_eval90: adaptation speed / replay, 90°</option>
     <option value="s6_reversion">s6_reversion: 0° → 60° → back to 0°</option>
+    <option value="s7_redetect/second_change">s7_redetect: 0° → 60° → −30° during adaptation</option>
+    <option value="s7_redetect/reversion">s7_redetect: reversion, ignore vs restart</option>
   </select></label>
   <button id="play">Play</button>
   <label>step <input type="range" id="slider" min="0" max="0" value="0"></label>
@@ -158,9 +160,7 @@ table.agg th { color: var(--ink-2); font-weight: 600; }
       <p class="note">From the run's own log. Held-out errors are measured on random-policy transitions the agent never trains on, immediately before and after every fine-tune.</p>
       <dl class="readout mono" id="tlReadout"></dl>
       <canvas id="tlChart" height="190"></canvas>
-      <div class="legend">
-        <span><i class="sw" style="background:var(--pred)"></i>held-out error, new (changed) dynamics</span>
-        <span><i class="sw" style="background:var(--ink-2)"></i>held-out error, original dynamics</span>
+      <div class="legend"><span id="tlLegend" style="display:contents"></span>
         <span><i class="sw" style="background:var(--shift)"></i>change</span>
         <span><i class="sw" style="background:var(--alarm)"></i>detection</span>
         <span><i class="sw" style="background:var(--update)"></i>fine-tune</span>
@@ -179,7 +179,7 @@ table.agg th { color: var(--ink-2); font-weight: 600; }
     </section>
     <section class="card" id="phaseCard" hidden>
       <h2>Phases, all seeds (from summary.json)</h2>
-      <p class="note">Mean ± sd across seeds. Held-out error = one-step MSE on random-policy transitions no agent trains on, measured at the end of each phase. "Adapting at reversion" = share of seeds still inside an adaptation window when the original dynamics returned (alarms are ignored during one). Oracle rows are told the change episodes; they are references, not deployable methods.</p>
+      <p class="note">Mean ± sd across seeds. Held-out error = one-step MSE on random-policy transitions no agent trains on, measured at the end of each phase. "Adapting at reversion" = share of seeds still inside an adaptation window when the original dynamics returned. "Restarts" = windows restarted by re-detection (s7); "clean fine-tune" = first fine-tune whose window opened after the change. Oracle rows are told the change episodes; they are references, not deployable methods.</p>
       <div style="overflow-x:auto"><table class="mono agg" id="phaseTable"></table></div>
     </section>
     <section class="card" id="aggCard" hidden>
@@ -198,11 +198,15 @@ table.agg th { color: var(--ink-2); font-weight: 600; }
 "use strict";
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-let D, S, cur = 0, timer = null, firstUpdate = null, alarmSteps = [], updateSteps = [], threshold = 10;
+let D, S, cur = 0, timer = null, firstUpdate = null, alarmSteps = [], updateSteps = [], threshold = 10, alarmMode = new Map();
 
-// Phase-aware runs (s6) carry D.changes and per-step `phase` (0 original, 1 changed, 2 reverted).
-const isChanged = s => D.changes ? s.phase === 1 : s.shifted;
-const isReverted = s => !!D.changes && s.phase === 2;
+// Phase-aware runs (s6, s7) carry D.changes and per-step `phase`; s7 also names its segments
+// (e.g. original / changed / changed_again). Without D.segments, phase 2 means "reverted" (s6).
+const segName = p => (D.segments || ["original", "changed", "reverted"])[p];
+const isReverted = s => !!D.changes && segName(s.phase) === "reverted";
+const isChanged = s => D.changes ? s.phase >= 1 && !isReverted(s) : s.shifted;
+const isAgain = s => !!D.changes && segName(s.phase) === "changed_again";
+const change2 = () => segName(2) === "changed_again" ? "second change" : "reversion";
 function setupCanvas(c) {
   const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = +c.getAttribute("height");
   c.width = w * dpr; c.height = h * dpr; c.style.height = h + "px";
@@ -226,6 +230,7 @@ function init(d) {
   // Alarms come from the agent's event log: the per-step flag stays raised while the statistic is above threshold.
   const idx = new Map(S.map((s, i) => [s.global_step, i]));
   alarmSteps = d.events.filter(e => e.type === "alarm" && idx.has(e.step)).map(e => idx.get(e.step));
+  d.events.forEach(e => { if (e.type === "alarm" && idx.has(e.step)) alarmMode.set(idx.get(e.step), e.mode); });
   S.forEach((s, i) => { if (s.update) updateSteps.push(i); });
   firstUpdate = updateSteps.length ? updateSteps[0] : null;
   const shiftIdx = S.findIndex(s => s.shifted);
@@ -235,7 +240,7 @@ function init(d) {
   $("effLegend").hidden = !("effective_action" in S[0]);
   $("slider").max = S.length - 1;
   d.episodes.forEach((e, i) => { const o = document.createElement("option"); o.value = i;
-    const tag = d.changes ? ["", " (rotated)", " (reverted)"][e.phase] : (e.post_shift ? " (changed)" : "");
+    const tag = d.changes ? ["", " (rotated)", segName(2) === "changed_again" ? " (rotated again)" : " (reverted)"][e.phase] : (e.post_shift ? " (changed)" : "");
     o.textContent = `${i}${tag}: ${e.success ? "reached goal" : "failed"} in ${e.steps}`; $("epSel").appendChild(o); });
   $("slider").oninput = e => go(+e.target.value);
   $("epSel").onchange = e => go(S.findIndex(s => s.episode === +e.target.value));
@@ -256,6 +261,7 @@ function init(d) {
     `detector: drift ${c.detector?.drift}, threshold ${c.detector?.threshold}`,
     ((a) => `adaptation${d.condition ? " (" + d.condition + ")" : ""}: first fine-tune after ${a?.min_new} fresh steps, then every ${a?.every}, up to ${a?.max_new}; ` +
       `${a?.epochs} epochs; replay ratio ${a?.replay_ratio ?? 0}`)(d.adapt_settings || c.adapt),
+    D.segments ? "schedule: " + D.changes.map(ch => `${JSON.stringify(ch.to)} from episode ${ch.episode}`).join("; ") :
     `shift: ${JSON.stringify(D.shift)} from episode ${c.shift_experiment?.shift_episode}` +
       (c.shift_experiment?.revert_episode != null ? `; back to ${JSON.stringify(c.shift_experiment.revert)} from episode ${c.shift_experiment.revert_episode}` : ""),
   ].join("\n");
@@ -307,7 +313,7 @@ function drawArena() {
     const [ex, ey] = s.effective_action; drawArrow(g, X(px), Y(py), X(px + L * ex), Y(py + L * ey), css("--shift")); }
   g.fillStyle = css("--ink-2"); g.font = "11px ui-monospace, Menlo, monospace";
   g.fillText(`episode ${s.episode}  t=${s.t}`, X(-A) + 6, Y(A) + 14);
-  if (isChanged(s)) g.fillText("dynamics changed", X(-A) + 6, Y(A) + 28);
+  if (isChanged(s)) g.fillText(isAgain(s) ? "dynamics changed again" : "dynamics changed", X(-A) + 6, Y(A) + 28);
   if (isReverted(s)) g.fillText("dynamics reverted to original", X(-A) + 6, Y(A) + 28);
 }
 function drawArrow(g, x0, y0, x1, y1, col) {
@@ -321,7 +327,8 @@ function drawReadout() {
   const v = a => "[" + a.map(x => x.toFixed(3)).join(", ") + "]";
   const flags = [isChanged(s) ? '<span class="badge b-shift">dynamics changed</span>' : "",
     isReverted(s) ? '<span class="badge b-update">reverted to original</span>' : "",
-    alarmSteps.includes(cur) ? '<span class="badge b-alarm">alarm</span>' : "", s.update ? '<span class="badge b-update">model fine-tuned</span>' : ""].join(" ");
+    isAgain(s) ? '<span class="badge b-shift">second change</span>' : "",
+    alarmSteps.includes(cur) ? `<span class="badge b-alarm">${alarmMode.get(cur) === "redetect" ? "re-detected: window restarted" : "alarm"}</span>` : "", s.update ? '<span class="badge b-update">model fine-tuned</span>' : ""].join(" ");
   const rows = [
     ["global step", `${s.global_step}  (episode ${s.episode}, t=${s.t}) ${flags}`],
     ["state (x, y, vx, vy)", v(s.state)], ["chosen action (issued)", v(s.action)],
@@ -347,7 +354,7 @@ function axesLog(g, w, h, m, lo, hi) {
 }
 function markers(g, X, top, bot) {
   if (D.changes) {  // band over the changed phase; amber line at the change, dashed ink line at the reversion
-    const a = S.findIndex(s => s.phase === 1), b = S.findIndex(s => s.phase === 2), end = b >= 0 ? b : S.length - 1;
+    const a = S.findIndex(s => s.phase === 1), b = S.findIndex(s => s.phase === 2), end = b >= 0 && segName(2) === "reverted" ? b : S.length - 1;
     if (a >= 0) { g.fillStyle = css("--shift"); g.globalAlpha = 0.18; g.fillRect(X(a), top, X(end) - X(a), bot - top); g.globalAlpha = 1;
       g.fillRect(X(a) - 1, top, 2, bot - top); }
     if (b >= 0) { g.strokeStyle = css("--ink"); g.lineWidth = 1.5; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(b), top); g.lineTo(X(b), bot); g.stroke(); g.setLineDash([]); }
@@ -412,12 +419,16 @@ function clickJump(id, ev) {
   go(Math.round((x - MARGIN.l) / (w - MARGIN.l - MARGIN.r) * (S.length - 1)));
 }
 
+const S7 = { fresh: "--pred", replay: "--disag" };  // s7 names: {fresh,replay}_{ignore,restart}, oracle_{fresh,replay}
 const COND = { residual: ["--pred", [], "residual detection + adaptation"], none: ["--ink-2", [], "no adaptation"],
   disagreement: ["--disag", [], "disagreement detection + adaptation"], oracle: ["--update", [6, 4], "oracle: adapt at the change"],
   pd: ["--shift", [], "PD (pre-change gains)"], pd_retuned_oracle: ["--shift", [6, 4], "oracle: PD re-tuned on changed dynamics"],
   no_shift: ["--ink-2", [2, 3], "control: no change"] };
 function cond(c) {
   if (COND[c]) return COND[c];
+  const m7 = /^(fresh|replay)_(ignore|restart)$|^oracle_(fresh|replay)$/.exec(c);
+  if (m7) return m7[3] ? [S7[m7[3]], [2, 3], `oracle (told change times): ${m7[3]}`]
+    : [S7[m7[1]], m7[2] === "ignore" ? [6, 4] : [], `${m7[1]}: ${m7[2] === "ignore" ? "ignore alarms during a window (legacy)" : "restart window on re-detection"}`];
   const m = /^(adapt|oracle)_m(\d+)_r([\d.]+)$/.exec(c);
   if (!m) return null;
   const r = +m[3], col = r === 0 ? "--pred" : r <= 0.25 ? "--disag" : "--update", oracle = m[1] === "oracle";
@@ -430,13 +441,18 @@ function drawAdaptTimeline() {
   const a = D.adapt_settings, fts = D.events.filter(e => e.type === "finetune");
   const dd = (x, y) => x == null || y == null ? "—" : `${x - y} steps after the change`;
   const rows = D.changes ? D.changes.flatMap((c, i) => {
-    const lbl = i === 0 ? "change" : "reversion", d = c.detection_delay, f = c.first_finetune_delay;
+    const lbl = i === 0 ? "change" : change2(), d = c.detection_delay, f = c.first_finetune_delay;
+    const how = D.events.find(e => e.type === "alarm" && e.step >= c.step && (i + 1 >= D.changes.length || e.step < D.changes[i + 1].step));
     return [[lbl, `episode ${c.episode}, step ${c.step} (${Object.entries(c.to).map(([k, v]) => k + " → " + v).join(", ")})`],
-      [`  detection`, d == null ? "no alarm in this phase" : `${d} steps after the ${lbl}`],
+      [`  detection`, d == null ? "no alarm in this phase" : `${d} steps after the ${lbl}` + (how?.mode === "redetect" ? " (re-detected during the open window; window restarted)" : "")],
       [`  first fine-tune`, f == null ? "none in this phase" : `${f} steps after the ${lbl}`],
       [`  1st episode after ${lbl}`, c.first_episode_success ? "reached goal" : "failed"],
-      [`  adapting when it came`, c.adapting_at_change ? `yes (${c.post_alarm_rows_at_change} post-alarm rows; alarms ignored until the window ends)` : "no"]]; })
-    .concat([["settings", `min_new ${a.min_new}, every ${a.every}, max_new ${a.max_new}, ${a.epochs} epochs, lr ${a.lr}, replay ratio ${a.replay_ratio}`],
+      [`  adapting when it came`, c.adapting_at_change ? `yes (${c.state_at_change ?? "window open"}, ${c.post_alarm_rows_at_change} post-alarm rows; ` +
+        (a.on_alarm_during_adapt === "restart" ? `re-detection armed after the window's first fine-tune)` : "alarms ignored until the window ends)") : "no"]]; })
+    .concat([["settings", `min_new ${a.min_new}, every ${a.every}, max_new ${a.max_new}, ${a.epochs} epochs, lr ${a.lr}, replay ratio ${a.replay_ratio}` +
+        (a.on_alarm_during_adapt ? `; during a window: ${a.on_alarm_during_adapt}` + (a.on_alarm_during_adapt === "restart" ?
+          ` (re-detection drift ${a.redetect_drift}, threshold ${a.redetect_threshold}, at most ${a.max_redetections} restarts)` : "") : "")],
+      ["alarms", D.events.filter(e => e.type === "alarm").map(e => `step ${e.step} (${e.mode})`).join(", ")],
       ["fine-tunes", fts.map(e => `${e.n_fresh}+${e.n_replay ?? 0}`).join(", ") + "  (fresh + replayed transitions)"]]) : null;
   $("tlReadout").innerHTML = (rows || [
     ["change", `step ${T.change_step} (${Object.entries(D.shift).map(([k, v]) => k + " → " + v).join(", ")})`],
@@ -449,7 +465,8 @@ function drawAdaptTimeline() {
   ]).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
   // staircase of held-out errors: initial value, then before/after each fine-tune
   const [g, w, h] = setupCanvas($("tlChart")), X = xScale(w), idx = new Map(S.map((s, i) => [s.global_step, i]));
-  const series = { new_dynamics: [], old_dynamics: [] };
+  const keys = D.heldout_initial ? Object.keys(D.heldout_initial) : ["new_dynamics", "old_dynamics"];
+  const series = Object.fromEntries(keys.map(k => [k, []]));
   for (const k in series) {
     let v = D.heldout_initial?.[k]?.h1 ?? fts[0]?.heldout_before?.[k]; series[k].push([0, v]);
     for (const e of fts) { if (!e.heldout_after) continue; const i = idx.get(e.step) ?? S.length - 1;
@@ -460,7 +477,10 @@ function drawAdaptTimeline() {
   if (!vals.length) return;
   const Y = axesLog(g, w, h, MARGIN, 10 ** Math.floor(Math.log10(Math.min(...vals))), 10 ** Math.ceil(Math.log10(Math.max(...vals))));
   markers(g, X, MARGIN.t, h - MARGIN.b);
-  for (const [k, col] of [["old_dynamics", "--ink-2"], ["new_dynamics", "--pred"]]) {
+  const COLS = ["--ink-2", "--pred", "--disag"], label = k => ({ old_dynamics: "original dynamics", new_dynamics: "changed dynamics" })[k] ??
+    k.replace(/^rot(.*)$/, "rotation $1°");
+  $("tlLegend").innerHTML = keys.map((k, i) => `<span><i class="sw" style="background:var(${COLS[i % 3]})"></i>held-out error, ${label(k)}</span>`).join("");
+  for (const [k, col] of keys.map((k, i) => [k, COLS[i % 3]])) {
     g.strokeStyle = css(col); g.lineWidth = 2; g.beginPath();
     series[k].forEach(([i, v], j) => j ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke(); }
   cursor(g, X, MARGIN.t, h - MARGIN.b);
@@ -493,7 +513,7 @@ function drawComparison() {
   const rn = names.filter(c => C[c].residual && c !== "no_shift"), k = 15;
   const start = D.changes ? 0 : D.shift_step;  // phase runs: whole run, with each condition's change/reversion ticked
   $("cmpResNote").textContent = "Observed one-step error of each agent's own model, scored before training on the step; 15-step moving mean, log scale, " +
-    (D.changes ? "x = agent steps; ticks mark each condition's change (▲) and reversion (▼)." : "x = steps since the change.");
+    (D.changes ? `x = agent steps; ticks mark each condition's change (▲) and ${change2()} (▼).` : "x = steps since the change.");
   const series = rn.map(c => [c, smooth(C[c].residual, k).slice(start)]);
   const vals = series.flatMap(([, a]) => a).filter(v => v > 0);
   if (!vals.length) return;
@@ -516,13 +536,29 @@ function drawComparison() {
   drawPhaseTable();
 }
 function drawPhaseTable() {
-  const card = $("phaseCard"); card.hidden = !(SUMMARY && Object.keys(SUMMARY).some(k => k.endsWith(".reverted.success")));
+  const p2 = D.changes ? segName(2) : "reverted", suf = `.${p2}.success`;
+  const card = $("phaseCard"); card.hidden = !(SUMMARY && Object.keys(SUMMARY).some(k => k.endsWith(suf)));
   if (card.hidden) return;
-  const conds = Object.keys(SUMMARY).filter(k => k.endsWith(".reverted.success")).map(k => k.slice(0, -17)).filter(c => cond(c));
+  const conds = Object.keys(SUMMARY).filter(k => k.endsWith(suf)).map(k => k.slice(0, -suf.length)).filter(c => cond(c));
   const ms = (k, pct) => { const v = SUMMARY[k]; if (!v || v.mean == null) return "—";
     const f = x => pct ? (100 * x).toFixed(0) + "%" : (Math.abs(x) < 1e-2 && x !== 0 ? x.toExponential(1) : x.toFixed(1));
     const n = v.values.filter(x => x == null).length; return f(v.mean) + (v.values.length > 1 ? " ± " + f(v.std) : "") + (n ? ` (${n} none)` : ""); };
-  const cols = [["success: original", "original.success", 1], ["changed", "changed.success", 1], ["reverted", "reverted.success", 1],
+  const hk = Object.keys(SUMMARY).filter(k => k.startsWith(conds[0] + ".changed.end_heldout.")).map(k => k.split(".").pop());
+  const deg = i => `${D.changes[i]?.to?.rotation_deg ?? "?"}°`;
+  const cols = p2 === "changed_again" ? [["success: original", "original.success", 1], [deg(0), "changed.success", 1], [deg(1), "changed_again.success", 1],
+    ["return: whole run", "return"], [deg(0), "changed.return"], [deg(1), "changed_again.return"],
+    ["1st ep. after 2nd change", "changed_again.first_episode_success", 1], ["2nd change: detected", "changed_again.detected", 1],
+    ["detect delay: 1st change", "changed.detection_delay"], ["2nd change", "changed_again.detection_delay"],
+    ["1st clean fine-tune after 2nd change", "changed_again.clean_finetune_delay"], ["restarts", "n_restarts"],
+    ...hk.map(k => [`held-out end of run: ${k}`, `changed_again.end_heldout.${k}`]),
+    ["fine-tunes", "n_finetunes"], ["fine-tune s", "finetune_seconds_total"]] :
+    SUMMARY[`${conds[0]}.n_restarts`] ? [["success: original", "original.success", 1], ["changed", "changed.success", 1], ["reverted", "reverted.success", 1],
+    ["return: whole run", "return"], ["changed", "changed.return"], ["reverted", "reverted.return"],
+    ["1st ep. after reversion", "reverted.first_episode_success", 1], ["reversion: 1st ep. return", "reverted.first_episode_return"],
+    ["detect delay: reversion", "reverted.detection_delay"], ["1st clean fine-tune after reversion", "reverted.clean_finetune_delay"], ["restarts", "n_restarts"],
+    ...hk.map(k => [`held-out end of changed: ${k}`, `changed.end_heldout.${k}`]), ...hk.map(k => [`end of run: ${k}`, `reverted.end_heldout.${k}`]),
+    ["fine-tunes", "n_finetunes"], ["fine-tune s", "finetune_seconds_total"]] :
+    [["success: original", "original.success", 1], ["changed", "changed.success", 1], ["reverted", "reverted.success", 1],
     ["return: original", "original.return"], ["changed", "changed.return"], ["reverted", "reverted.return"],
     ["1st ep. after change", "changed.first_episode_success", 1], ["1st ep. after reversion", "reverted.first_episode_success", 1],
     ["reversion: 1st ep. return", "reverted.first_episode_return"], ["detect delay: change", "changed.detection_delay"],

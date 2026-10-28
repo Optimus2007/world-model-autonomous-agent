@@ -69,6 +69,16 @@ class AdaptConfig:
     # Fraction of each fine-tune set drawn from data the agent held *before* the alarm (pretraining
     # transitions + its own pre-alarm transitions). 0 = fine-tune on fresh post-alarm data only.
     replay_ratio: float = 0.0
+    # What to do when the residual rises again while an adaptation window is open:
+    #   "ignore"  - legacy: keep the current window (alarms are discarded until it closes);
+    #   "restart" - treat it as a new change: rows collected so far become old data (replay pool), and a
+    #               new window starts collecting fresh rows. See WorldModelAgent for the state machine.
+    on_alarm_during_adapt: Literal["ignore", "restart"] = "ignore"
+    # Re-detection CUSUM, on the same calibrated residual scale but with a larger drift: after a fine-tune
+    # the model is still partly wrong, so the main detector (drift 0.5) keeps firing without any new change.
+    redetect_drift: float = 1.5
+    redetect_threshold: float = 10.0
+    max_redetections: int = 2   # per chain of windows; the counter resets when the agent returns to NORMAL
 
 
 @dataclass
@@ -82,6 +92,25 @@ class AgentConfig:
 
 
 class WorldModelAgent:
+    """Adaptation state machine (`self.state`):
+
+        NORMAL --alarm--> COLLECTING --min_new fresh rows: fine-tune--> ADAPTING --max_new rows--> NORMAL
+                                                                          |
+                    (policy "restart") persistent residual rise: REDETECTED, restart the window
+                    ---------------------------------------------------------> COLLECTING
+
+    COLLECTING: a change is suspected; fresh rows are stored, the model is unchanged, so its residual is
+    expected to be high and re-detection is disarmed. This is the cooldown: at least min_new rows and one
+    fine-tune separate two (re)starts.
+    ADAPTING: at least one fine-tune has happened in this window; the model is re-fine-tuned every `every`
+    rows. Re-detection is armed: a separate CUSUM (redetect_drift / redetect_threshold), reset after every
+    fine-tune, watches for the residual rising persistently above what the partly adapted model produces.
+    REDETECTED is an instantaneous transition, logged as an alarm with mode "redetect". At most
+    max_redetections restarts happen before the agent returns to NORMAL, which bounds retraining to
+    (1 + max_redetections) windows per chain. With policy "ignore" the redetector still runs and its firings
+    are counted in `ignored_redetections`, but nothing changes (legacy behaviour, bit-identical).
+    """
+
     def __init__(self, model: EnsembleWorldModel, config: AgentConfig, seed: int = 0):
         self.model, self.cfg = model, config
         self.planner = CEMPlanner(model.step_members, len(model.members), config.planner, seed=seed)
@@ -99,11 +128,24 @@ class WorldModelAgent:
         self.pre_alarm_end = 0                # buffer rows [0, pre_alarm_end) predate the latest alarm
         # Optional held-out sets {name: arrays}, used only to *measure* error around each fine-tune.
         self.eval_sets: dict | None = None
+        self.state = "NORMAL"
+        self.redetect_det = CusumDetector(DetectorConfig(drift=config.adapt.redetect_drift,
+                                                         threshold=config.adapt.redetect_threshold,
+                                                         eps=config.detector.eps))
+        self.n_redetections = 0               # restarts in the current chain of windows
+        self.ignored_redetections: list[int] = []   # steps where the redetector fired but policy said ignore
 
     # ---------- calibration (no model updates, data never used for fitting) ----------
     def calibrate(self, residuals: np.ndarray, disagreements: np.ndarray) -> dict:
-        return {"residual": self.residual_det.calibrate(residuals),
-                "disagreement": self.disagree_det.calibrate(disagreements)}
+        out = {"residual": self.residual_det.calibrate(residuals),
+               "disagreement": self.disagree_det.calibrate(disagreements)}
+        self.set_redetect_reference()
+        return out
+
+    def set_redetect_reference(self) -> None:
+        """The redetector standardises residuals exactly like the main residual detector."""
+        self.redetect_det.mu, self.redetect_det.sd = self.residual_det.mu, self.residual_det.sd
+        self.redetect_det.reset()
 
     # ---------- one decision ----------
     def act(self, state: np.ndarray, goal: np.ndarray) -> tuple[np.ndarray, Plan, float]:
@@ -130,8 +172,18 @@ class WorldModelAgent:
             mode = self.cfg.detect_mode
             alarm = ((mode == "residual" and r_alarm) or (mode == "disagreement" and d_alarm)
                      or (mode == "oracle" and shift_happened and not self.alarms))
-        if alarm and not self.adapting:  # an alarm during an ongoing adaptation is ignored
+        if alarm and not self.adapting:  # main-detector alarms during a window go to the redetector below
             self._start_adaptation(pre_alarm_end=row, mode=self.cfg.detect_mode)
+        elif self.state == "ADAPTING" and self.redetect_det.mu is not None and self.cfg.detect_mode == "residual":
+            if self.redetect_det.update(residual):
+                if (self.cfg.adapt.on_alarm_during_adapt == "restart"
+                        and self.n_redetections < self.cfg.adapt.max_redetections):
+                    self.n_redetections += 1
+                    self._start_adaptation(pre_alarm_end=row, mode="redetect")
+                    alarm = True
+                else:
+                    self.ignored_redetections.append(self.global_step)
+                    self.redetect_det.reset()
         update = None
         if self.adapting:
             self.post_alarm.append(row)
@@ -144,9 +196,12 @@ class WorldModelAgent:
     def _start_adaptation(self, pre_alarm_end: int, mode: str) -> None:
         self.alarms.append(self.global_step)
         self.events.append({"step": self.global_step, "type": "alarm", "mode": mode})
-        self.adapting, self.post_alarm = True, []
+        if mode != "redetect":
+            self.n_redetections = 0
+        self.adapting, self.post_alarm, self.state = True, [], "COLLECTING"
         self.next_adapt_at = self.cfg.adapt.min_new
         self.pre_alarm_end = pre_alarm_end
+        self.redetect_det.reset()   # the main detectors are left as before (legacy runs stay bit-identical)
 
     def trigger_adaptation(self, mode: str = "oracle") -> None:
         """Start adaptation before the next step, restarting any adaptation in progress. Used only by
@@ -190,15 +245,18 @@ class WorldModelAgent:
         t0 = time.perf_counter()
         info = self.model.finetune(s, act, nxt, epochs=a.epochs, lr=a.lr, rng=self.rng)
         info.update({"step": self.global_step, "type": "finetune", "n_fresh": int(len(rows)),
-                     "n_replay": n_replay, "seconds": time.perf_counter() - t0})
+                     "n_replay": n_replay, "seconds": time.perf_counter() - t0,
+                     "window_start": self.alarms[-1] if self.alarms else None})
         if before is not None:
             info.update({"heldout_before": before, "heldout_after": self._eval_errors()})
         self.events.append(info)
         self.next_adapt_at += a.every
+        self.state = "ADAPTING"
         if len(rows) >= a.max_new:
-            self.adapting = False
+            self.adapting, self.state = False, "NORMAL"
         self.residual_det.reset()
         self.disagree_det.reset()
+        self.redetect_det.reset()
         return info
 
     def end_episode(self) -> dict | None:

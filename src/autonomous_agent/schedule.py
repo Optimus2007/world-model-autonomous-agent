@@ -18,3 +18,8 @@ def episode_phase(episode: int, shift_episode: int, revert_episode: int | None =
 def phase_dynamics(phase: int, shift: dict, revert: dict | None) -> dict | None:
     """Dynamics overrides to apply for a phase (None = environment defaults)."""
     return {0: None, 1: shift, 2: revert}[phase]
+
+
+def segment_index(episode: int, change_episodes: list[int]) -> int:
+    """General schedule: segment k runs from change k-1 (segment 0 = original dynamics) up to change k."""
+    return sum(episode >= c for c in change_episodes)
