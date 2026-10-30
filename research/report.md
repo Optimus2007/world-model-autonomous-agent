@@ -795,7 +795,7 @@ audit (`research/plan.md`, Section 1).
 | Model accuracy (M1) | One step error: model 1.40e-3, constant velocity 2.83e-3, zero delta 3.58e-3 | `results/m1` |
 | Walls (Step 1) | 213 of 2000 test transitions (10.7%) are wall contacts and carry 85% of the squared error; hence the wall rule in the model | `results/s1_walls` |
 | Planning (Step 2) | CEM on the learned model −31.8 against tuned PD −31.1, both 100% success; 26.0 ms against 0.0032 ms per decision | `results/s2_planning` |
-| Disagreement signal (Step 3) | Spearman correlation of ensemble disagreement with error 0.461 on stationary data, 0.292 after a gain and drag shift; disagreement based detection took about 405 steps and raised false alarms, so the residual detector was used | `results/s3_shift` |
+| Disagreement signal (Step 3) | Spearman correlation of ensemble disagreement with error 0.461 on stationary data, 0.292 after a gain and drag shift; online disagreement based detection took about 405 steps in 4 of 5 seeds, missed the change in the fifth and raised false alarms, so the residual detector was used | `results/s3_shift` |
 | Rotation (Step 4) | Without adaptation 0% success after a 60° or 90° rotation; residual detection and adaptation 95.5%; detection delay 3.6 and 2.6 steps | `results/s4_rotation60`, `results/s4_rotation90` |
 
 ### B. Per seed differences
