@@ -26,3 +26,6 @@ results/**/checkpoints/
 results/m1_repro/
 results/m1_repro.log
 results/**/pilot_config.yaml
+
+# Output of README reproduction commands (published results live in results/)
+/runs/
