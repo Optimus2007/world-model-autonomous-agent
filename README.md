@@ -175,9 +175,6 @@ tests/                         pytest suite
 The methods were implemented from their published descriptions: deep ensembles (Lakshminarayanan et al.,
 2017), CEM-MPC with trajectory sampling (Chua et al., 2018), CUSUM (Page, 1954) and experience replay
 against forgetting. No third-party code was copied.
-- `github.com/Optimus2007/physics-informed-world-models` (MIT) and
-  `github.com/Optimus2007/rl-alignment-and-reward-hacking` (MIT) were inspected; no code was copied.
-- `github.com/Shushant17711/impresario` (MIT) provided design guidance for the dashboard; no code was copied.
 
 ## License
 
