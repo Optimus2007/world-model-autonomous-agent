@@ -68,7 +68,7 @@ Run these from the project root with the virtual environment active. `run_adapt_
 | 6: reversion 0° → 60° → 0° | `python scripts/run_reversion.py --config configs/reversion60.yaml --out results/s6_reversion --workers 5` | `results/s6_reversion` |
 | 7a: tune re-detection (seeds 100–102) | `python scripts/run_redetect.py --phase tune --config configs/redetect60.yaml --out results/s7_redetect_tune --workers 7` | `results/s7_redetect_tune` (`selection.json`) |
 | 7b: change during adaptation (seeds 0–4) | `python scripts/run_redetect.py --phase eval --config configs/redetect60.yaml --out results/s7_redetect --workers 7` | `results/s7_redetect` |
-| 8: research study (short-window competitor, seeds 5–9, three untuned schedules) | the three `run_redetect.py --config configs/redetect60_ext.yaml` commands in `research/report.md`, Section 10, then `python scripts/analyze_research.py` | `results/s8_short_s0_4`, `results/s8_seeds5_9`, `results/s8_newscen`; tables and figures in `research/results`, `research/figures` |
+| 8: research study (short-window competitor, seeds 5–9, three untuned schedules) | the three `run_redetect.py --config configs/redetect60_ext.yaml` commands in `research/report.md`, Section 10 | `results/s8_short_s0_4`, `results/s8_seeds5_9`, `results/s8_newscen`; tables and figures in `research/results`, `research/figures` |
 
 Seeds are fixed in the configs. Pretraining, calibration, evaluation, tuning and held-out reset seeds
 come from separate ranges, and `run_adapt_sweep.py` asserts that tuning and evaluation share no environment
@@ -232,6 +232,7 @@ explanation: the legacy `ignore` policy with a short window (`max_new` 150). Mai
   the single-change control and after the gain change.
 
 The Step 7 numbers above are unchanged; Step 8 adds seeds and conditions in new result directories.
+The compiled paper is `paper/main.pdf`.
 
 ## Dashboard
 

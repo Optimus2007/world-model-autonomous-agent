@@ -328,7 +328,8 @@ With ten seeds and many comparisons, these numbers are descriptive and are not c
 | `results/s8_seeds5_9` | 5–9 | same | all |
 | `results/s8_newscen` | 0–9 | the three untuned schedules | all except oracles |
 
-`scripts/analyze_research.py` merges these and writes every table and figure in this report.
+Every table and figure in this report was computed from these saved results (`research/results` holds the
+merged tables). The analysis script itself is not published in this repository.
 
 ## 6. Results
 
@@ -685,8 +686,7 @@ library, are the clear next steps.
 ## 10. Reproducibility
 
 **Code and configuration.** Repository root `world-model-autonomous-agent`. The agent and state machine
-are in `src/autonomous_agent/agent.py`; the experiment runner is `scripts/run_redetect.py`; the analysis
-is `scripts/analyze_research.py`. Step 7 used `configs/redetect60.yaml`; Step 8 used
+are in `src/autonomous_agent/agent.py`; the experiment runner is `scripts/run_redetect.py`. Step 7 used `configs/redetect60.yaml`; Step 8 used
 `configs/redetect60_ext.yaml`, whose shared settings are identical to it.
 
 **Software.** Python 3.13.7, torch 2.14.1, numpy 2.5.4, matplotlib 3.11.2, PyYAML 6.0.3, on CPU.
@@ -705,7 +705,6 @@ python scripts/run_redetect.py --phase eval --config configs/redetect60_ext.yaml
     --out results/s8_newscen --seeds 0 1 2 3 4 5 6 7 8 9 \
     --scenarios late_second large_second gain_second \
     --conditions none fresh_ignore fresh_restart replay_ignore replay_restart fresh_ignore_short replay_ignore_short
-python scripts/analyze_research.py
 ```
 
 The runner refuses to write into an existing output directory, so earlier results cannot be overwritten.
